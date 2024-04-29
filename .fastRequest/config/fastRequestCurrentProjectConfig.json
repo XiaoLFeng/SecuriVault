@@ -10,7 +10,7 @@
 		{
 			"hostGroup":[
 				{
-					"env":"local",
+					"env":"dev",
 					"url":"http://localhost:33333"
 				}
 			],
@@ -18,7 +18,7 @@
 		}
 	],
 	"envList":[
-		"local"
+		"dev"
 	],
 	"headerList":[],
 	"ignoreParseFieldList":[],
