@@ -32,29 +32,20 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault;
+package com.xlf.securivault.constant;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.stereotype.Component;
 
 /**
- * Springboot启动
+ * 系统配置变量
+ * <hr/>
+ * 用于定义系统配置变量，用于定义系统配置变量；
  *
- * @author xiao_lfeng
  * @since v1.0.0
  * @version v1.0.0
+ * @author xiao_lfeng
  */
-@EnableAsync
-@EnableScheduling
-@EnableWebSecurity
-@SpringBootApplication
-public class SecuriVaultApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(SecuriVaultApplication.class, args);
-    }
-
+@Component
+public class SystemConfigurationVariable {
+    public static String VERSION;
 }

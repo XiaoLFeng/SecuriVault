@@ -1,12 +1,13 @@
-server:
-  port: 33333
 spring:
-  application:
-    name: SecuriVault
   datasource:
       url: jdbc:postgresql://localhost:5432/securivault
       username: securivault
       password: securivault
       driver-class-name: org.postgresql.Driver
-  profiles:
-    active: dev
+logging:
+  file:
+    name: '/.logs/securivault.log'
+  level:
+    root: error
+    com.xlf: debug
+    com.xlf.mappers: info

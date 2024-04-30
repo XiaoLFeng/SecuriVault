@@ -32,29 +32,83 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault;
+package com.xlf.securivault.models.entity;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.Data;
+
+import java.sql.Timestamp;
+import java.util.UUID;
 
 /**
- * Springboot启动
+ * 用户表
+ * <hr/>
+ * 用于定义用户表，用于定义用户的基本信息；
  *
+ * @since 1.0.0
+ * @version 1.0.0
  * @author xiao_lfeng
- * @since v1.0.0
- * @version v1.0.0
  */
-@EnableAsync
-@EnableScheduling
-@EnableWebSecurity
-@SpringBootApplication
-public class SecuriVaultApplication {
+@Data
+@TableName("xf_user")
+public class UserDO {
+    /**
+     * 用户识别码
+     */
+    @TableId(value = "uuid", type = IdType.AUTO)
+    private UUID uuid;
 
-    public static void main(String[] args) {
-        SpringApplication.run(SecuriVaultApplication.class, args);
-    }
+    /**
+     * 用户名
+     */
+    @TableField("username")
+    private String username;
 
+    /**
+     * 昵称
+     */
+    @TableField("nickname")
+    private String nickname;
+
+    /**
+     * 邮箱
+     */
+    @TableField("email")
+    private String email;
+
+    /**
+     * 手机
+     */
+    @TableField("phone")
+    private String phone;
+
+    /**
+     * 角色uuid(ruuid)
+     */
+    @TableField("role")
+    private UUID role;
+
+    /**
+     * 密码
+     */
+    @TableField("password")
+    private Integer password;
+
+    /**
+     * 旧密码
+     */
+    @TableField("old_password")
+    private Integer oldPassword;
+
+    /**
+     * 创建时间
+     */
+    @TableField(value = "created_at", fill = FieldFill.INSERT)
+    private Timestamp createdAt;
+
+    /**
+     * 更新时间
+     */
+    @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
+    private Timestamp updatedAt;
 }

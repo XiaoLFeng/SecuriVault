@@ -32,29 +32,22 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault;
+-- 手机验证码
+create table xf_phone_verify_code
+(
+    id         bigserial
+        constraint xf_email_verify_code_pk
+            primary key,
+    phone      varchar(11)             not null,
+    code       varchar(10)             not null,
+    created_at timestamp default now() not null,
+    expired_at timestamp               not null
+);
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+comment on table xf_phone_verify_code is '邮箱验证码';
+comment on column xf_phone_verify_code.id is '自增主键';
+comment on column xf_phone_verify_code.phone is '邮箱';
+comment on column xf_phone_verify_code.code is '验证码';
+comment on column xf_phone_verify_code.created_at is '创建时间';
+comment on column xf_phone_verify_code.expired_at is '过期时间';
 
-/**
- * Springboot启动
- *
- * @author xiao_lfeng
- * @since v1.0.0
- * @version v1.0.0
- */
-@EnableAsync
-@EnableScheduling
-@EnableWebSecurity
-@SpringBootApplication
-public class SecuriVaultApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(SecuriVaultApplication.class, args);
-    }
-
-}

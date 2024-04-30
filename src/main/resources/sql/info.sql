@@ -32,29 +32,21 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault;
+-- 信息表
+create table xf_info
+(
+    id         serial
+        constraint xf_info_pk
+            primary key,
+    key        varchar                 not null,
+    value      varchar,
+    created_at timestamp default now() not null,
+    updated_at timestamp
+);
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
-/**
- * Springboot启动
- *
- * @author xiao_lfeng
- * @since v1.0.0
- * @version v1.0.0
- */
-@EnableAsync
-@EnableScheduling
-@EnableWebSecurity
-@SpringBootApplication
-public class SecuriVaultApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(SecuriVaultApplication.class, args);
-    }
-
-}
+comment on table xf_info is '信息表';
+comment on column xf_info.id is '自增主键';
+comment on column xf_info.key is '键';
+comment on column xf_info.value is '值';
+comment on column xf_info.created_at is '创建时间';
+comment on column xf_info.updated_at is '修改时间';

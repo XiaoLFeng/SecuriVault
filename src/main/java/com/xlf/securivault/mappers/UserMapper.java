@@ -32,29 +32,20 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault;
+package com.xlf.securivault.mappers;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xlf.securivault.models.entity.UserDO;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
- * Springboot启动
+ * 用户映射器
+ * <hr/>
+ * 用于定义用户映射器，用于定义用户的映射器；
  *
+ * @since 1.0.0
+ * @version 1.0.0
  * @author xiao_lfeng
- * @since v1.0.0
- * @version v1.0.0
  */
-@EnableAsync
-@EnableScheduling
-@EnableWebSecurity
-@SpringBootApplication
-public class SecuriVaultApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(SecuriVaultApplication.class, args);
-    }
-
-}
+@Mapper
+public interface UserMapper extends BaseMapper<UserDO> { }

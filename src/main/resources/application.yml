@@ -1,0 +1,8 @@
+version: v1.0.0
+server:
+  port: 33333
+spring:
+  profiles:
+    active: dev
+  application:
+    name: SecuriVault

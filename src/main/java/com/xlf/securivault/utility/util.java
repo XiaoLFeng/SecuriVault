@@ -32,29 +32,31 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault;
+package com.xlf.securivault.utility;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.UUID;
 
 /**
- * Springboot启动
+ * 工具类
+ * <hr/>
+ * 用于定义一些工具类，用于定义一些工具类；
  *
+ * @since 1.0.0
+ * @version 1.0.0
  * @author xiao_lfeng
- * @since v1.0.0
- * @version v1.0.0
  */
-@EnableAsync
-@EnableScheduling
-@EnableWebSecurity
-@SpringBootApplication
-public class SecuriVaultApplication {
+public class util {
 
-    public static void main(String[] args) {
-        SpringApplication.run(SecuriVaultApplication.class, args);
+    /**
+     * 生成一个 UUID
+     * <hr/>
+     * 生成一个 UUID; 用于生成数据库所需要的随机 UUID
+     *
+     * @return UUID
+     */
+    public static @NotNull UUID generateUuid() {
+        return UUID.randomUUID();
     }
-
 }
