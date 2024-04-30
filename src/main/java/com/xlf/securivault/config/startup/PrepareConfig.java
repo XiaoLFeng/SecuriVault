@@ -35,6 +35,7 @@
 package com.xlf.securivault.config.startup;
 
 import com.xlf.securivault.constant.SystemConfigurationVariable;
+import com.xlf.securivault.utility.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -42,6 +43,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
@@ -102,6 +104,7 @@ public class PrepareConfig {
             prepare.table("email_verify_code");
             prepare.table("role");
             prepare.table("user");
+            prepare.table("token");
             prepare.table("password_library");
         };
     }
@@ -127,6 +130,44 @@ public class PrepareConfig {
     /**
      * 系统启动准备
      * <hr/>
+     * 用于处理服务缺失对应数据表处理的资源；
+     * 用于检查是否需要生成超级管理员用户
+     *
+     * @return CommandLineRunner
+     */
+    @Bean
+    @Order(4)
+    public CommandLineRunner prepareThree() {
+        return args -> {
+            log.info("[STARTUP] 检查是否需要生成超级管理员用户");
+            try {
+                jdbcTemplate.queryForObject("SELECT uuid FROM public.xf_user WHERE username = 'admin'", String.class);
+            } catch (DataAccessException e) {
+                log.info("[STARTUP] 未找到超级管理员用户,开始生成admin用户");
+                log.info("\t用户名: admin");
+                log.info("\t密码: admin");
+                String ruuid = jdbcTemplate.queryForObject(
+                        "SELECT ruuid FROM public.xf_role WHERE name = 'admin'",
+                        String.class
+                );
+                jdbcTemplate.update("""
+                        INSERT INTO public.xf_user (uuid, username, password, email, phone, role)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                        """,
+                        Util.generateUuid(),
+                        "admin",
+                        Util.enPassword("admin"),
+                        "admin@securivault.com",
+                        "18888888888",
+                        ruuid
+                );
+            }
+        };
+    }
+
+    /**
+     * 系统启动准备
+     * <hr/>
      * 用于用于处理服务准备的环境变量；
      *
      * @return CommandLineRunner
@@ -136,7 +177,7 @@ public class PrepareConfig {
     public CommandLineRunner prepareEnv() {
         return args -> {
             // 获取配置文件中的版本号
-            SystemConfigurationVariable.VERSION = environment.getProperty("version");
+            SystemConfigurationVariable.setVersion(environment.getProperty("version"));
         };
     }
 
@@ -161,7 +202,7 @@ public class PrepareConfig {
                        /___/\\__/\\__/\\_,_/_/ /_/ |___/\\_,_/\\_,_/_/\\__/\s
                     """);
             System.out.print("   \033[32;1m::: SecuriVault :::             ");
-            System.out.printf("\033[36;1m::: %s :::\033[0m\n\n", SystemConfigurationVariable.VERSION);
+            System.out.printf("\033[36;1m::: %s :::\033[0m\n\n", SystemConfigurationVariable.getVersion());
         };
     }
 }

@@ -32,43 +32,85 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.models.dto;
+package com.xlf.securivault.dao;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xlf.securivault.mappers.UserMapper;
+import com.xlf.securivault.models.entity.UserDO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 /**
- * 返回用户当前对象
+ * 用户数据访问对象
  * <hr/>
- * 用于定义用户当前对象，用于返回用户当前的信息；
+ * 用于定义用户数据访问对象，用于定义用户数据访问对象；
  *
- * @since 1.0.0
- * @version 1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserCurrentDTO {
+@Slf4j
+@Repository
+@RequiredArgsConstructor
+public class UserDAO extends ServiceImpl<UserMapper, UserDO> implements IService<UserDO> {
+
     /**
-     * 用户UUID
+     * 根据用户名获取用户
+     * <hr/>
+     * 用于根据用户名获取用户；
+     *
+     * @param username 用户名
+     * @return 用户映射表
      */
-    private UUID uuid;
+    public UserDO getUserByUsername(String username) {
+        return this.lambdaQuery()
+                .eq(UserDO::getUsername, username)
+                .one();
+    }
+
     /**
-     * 用户名
+     * 根据邮箱获取用户
+     * <hr/>
+     * 用于根据邮箱获取用户；
+     *
+     * @param email 邮箱
+     * @return 用户映射表
      */
-    private String username;
+    public UserDO getUserByEmail(String email) {
+        return this.lambdaQuery()
+                .eq(UserDO::getEmail, email)
+                .one();
+    }
+
     /**
-     * 邮箱
+     * 根据手机号获取用户
+     * <hr/>
+     * 用于根据手机号获取用户；
+     *
+     * @param phone 手机号
+     * @return 用户映射表
      */
-    private String email;
+    public UserDO getUserByPhone(String phone) {
+        return this.lambdaQuery()
+                .eq(UserDO::getPhone, phone)
+                .one();
+    }
+
     /**
-     * 手机号
+     * 根据 UUID 获取用户
+     * <hr/>
+     * 用于根据 UUID 获取用户；
+     *
+     * @param uuid UUID
+     * @return 用户映射表
      */
-    private String phone;
+    public UserDO getUserByUuid(UUID uuid) {
+        return this.lambdaQuery()
+                .eq(UserDO::getUuid, uuid)
+                .one();
+    }
 }

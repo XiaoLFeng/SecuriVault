@@ -32,27 +32,60 @@
  * *******************************************************************************
  */
 
--- 角色表
-create table xf_role
-(
-    ruuid        varchar(36)                    not null
-        constraint xf_role_pk
-            primary key,
-    name         varchar(30)             not null,
-    display_name varchar(30),
-    description  varchar(255),
-    created_at   timestamp default now() not null,
-    updated_at   timestamp
-);
+package com.xlf.securivault.services;
 
-comment on table xf_role is '角色表';
-comment on column xf_role.ruuid is '角色 uuid';
-comment on column xf_role.name is '角色名';
-comment on column xf_role.display_name is '角色展示名';
-comment on column xf_role.description is '展示名';
-comment on column xf_role.created_at is '创建时间';
-comment on column xf_role.updated_at is '更新时间';
+import com.xlf.securivault.models.dto.UserCurrentDTO;
 
-create unique index xf_role_name_uindex
-    on xf_role (name);
+import java.util.UUID;
 
+/**
+ * 认证服务
+ * <hr/>
+ * 用于定义认证服务，用于定义认证服务；用于处理用户的认证信息；
+ *
+ * @since v1.0.0
+ * @version v1.0.0
+ * @author xiao_lfeng
+ */
+public interface AuthService {
+    /**
+     * 检查用户Token
+     * <hr/>
+     * 用于检查用户Token是否有效；
+     *
+     * @param userToken 用户Token
+     * @return 是否有效
+     */
+    boolean checkUserToken(String userToken);
+
+    /**
+     * 用户登录
+     * <hr/>
+     * 用于用户登录；用户支持用户名、邮箱、手机号登录；
+     *
+     * @param user 用户名
+     * @param password 密码
+     * @return 返回登录成功的用户信息
+     */
+    UserCurrentDTO userLogin(String user, String password);
+
+    /**
+     * 获取用户信息
+     * <hr/>
+     * 使用用户的 Token 获取用户信息；
+     *
+     * @param userToken 用户Token
+     * @return 返回登录成功的用户信息
+     */
+    UserCurrentDTO userLoginWithToken(String userToken);
+
+    /**
+     * 生成用户Token
+     * <hr/>
+     * 用于生成用户Token；
+     *
+     * @param getUser 用户信息
+     * @return 返回生成的用户Token
+     */
+    UUID generateUserToken(UserCurrentDTO getUser);
+}

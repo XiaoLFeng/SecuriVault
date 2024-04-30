@@ -43,8 +43,8 @@ import org.apache.ibatis.annotations.Mapper;
  * <hr/>
  * 用于定义用户映射器，用于定义用户的映射器；
  *
- * @since 1.0.0
- * @version 1.0.0
+ * @since v1.0.0
+ * @version v1.0.0
  * @author xiao_lfeng
  */
 @Mapper

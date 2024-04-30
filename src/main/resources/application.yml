@@ -1,8 +1,6 @@
 version: v1.0.0
 server:
-  port: 33333
+  port: 3333
 spring:
   profiles:
     active: dev
-  application:
-    name: SecuriVault

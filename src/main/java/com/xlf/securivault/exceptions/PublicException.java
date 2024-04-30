@@ -1,7 +1,42 @@
+/*
+ * *******************************************************************************
+ * Copyright (c) 2016-NOW(至今) 筱锋
+ * Author: 筱锋(https://www.x-lf.com)
+ *
+ * 本文件包含 SecuriValue 的源代码，该项目的所有源代码均遵循MIT开源许可证协议。
+ * 本代码仅进行 Java 大作业提交，个人发行版本计划使用 Go 语言重构。
+ * *******************************************************************************
+ * 许可证声明：
+ *
+ * 版权所有 (c) 2016-2024 筱锋。保留所有权利。
+ *
+ * 本软件是“按原样”提供的，没有任何形式的明示或暗示的保证，包括但不限于
+ * 对适销性、特定用途的适用性和非侵权性的暗示保证。在任何情况下，
+ * 作者或版权持有人均不承担因软件或软件的使用或其他交易而产生的、
+ * 由此引起的或以任何方式与此软件有关的任何索赔、损害或其他责任。
+ *
+ * 由于作者需要进行 Java 大作业提交，所以请勿抄袭。您可以作为参考，但是
+ * 一定不可以抄袭，尤其是同校同学！！！
+ * 你们可以自己参考代码优化给你们提供思路，开源目的不是给你们抄袭的，共
+ * 同维护好开源的社区环境！！！
+ *
+ * 使用本软件即表示您了解此声明并同意其条款。
+ *
+ * 有关MIT许可证的更多信息，请查看项目根目录下的LICENSE文件或访问：
+ * https://opensource.org/licenses/MIT
+ * *******************************************************************************
+ * 免责声明：
+ *
+ * 使用本软件的风险由用户自担。作者或版权持有人在法律允许的最大范围内，
+ * 对因使用本软件内容而导致的任何直接或间接的损失不承担任何责任。
+ * *******************************************************************************
+ */
+
 package com.xlf.securivault.exceptions;
 
 import com.xlf.securivault.exceptions.library.PageNotFoundedException;
 import com.xlf.securivault.exceptions.library.RequestBodyParametersException;
+import com.xlf.securivault.exceptions.library.RequestHeaderNotMatchException;
 import com.xlf.securivault.exceptions.library.SystemParameterError;
 import com.xlf.securivault.utility.BaseResponse;
 import com.xlf.securivault.utility.ErrorCode;
@@ -9,9 +44,12 @@ import com.xlf.securivault.utility.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +65,7 @@ import java.util.Objects;
  * @since v1.0.0
  */
 @Slf4j
+@RestControllerAdvice
 public class PublicException {
 
     /**
@@ -71,8 +110,8 @@ public class PublicException {
      * @return 返回异常信息
      */
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<BaseResponse<Object>> handleBusinessException(BusinessException e) {
-        log.warn("[EXCEPTION] 业务异常 | {}<{}>", e.getMessage(), e.getErrorCode());
+    public ResponseEntity<BaseResponse<Object>> handleBusinessException(@NotNull BusinessException e) {
+        log.warn("[EXCEPTION] <{}>{} | {}", e.getErrorCode().getCode(), e.getErrorCode().getMessage(), e.getMessage());
         // 异常处理
         return ResultUtil.error(e.getErrorCode(), e.getErrorMessage(), e.getData());
     }
@@ -155,6 +194,14 @@ public class PublicException {
         };
     }
 
+    /**
+     * 请求体参数异常处理
+     * <hr/>
+     * 用于处理请求体参数异常, 当请求体参数异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 请求体参数异常 RequestBodyParametersException
+     * @return 返回异常信息
+     */
     @ExceptionHandler(RequestBodyParametersException.class)
     public ResponseEntity<BaseResponse<List<RequestBodyParametersException.ErrorFunc>>>
     handleRequestBodyParametersException(@NotNull RequestBodyParametersException e) {
@@ -170,4 +217,34 @@ public class PublicException {
         );
     }
 
+    /**
+     * 请求头不匹配异常处理
+     * <hr/>
+     * 用于处理请求头不匹配异常, 当请求头不匹配异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 请求头不匹配异常 RequestHeaderNotMatchException
+     * @return 返回异常信息
+     */
+    @ExceptionHandler(RequestHeaderNotMatchException.class)
+    public ResponseEntity<BaseResponse<RequestHeaderNotMatchException>> handleRequestHeaderNotMatchException(
+            @NotNull RequestHeaderNotMatchException e
+    ) {
+        log.warn("[EXCEPTION] 请求头不匹配异常 | {}", e.getMessage());
+        return ResultUtil.error(ErrorCode.REQUEST_METHOD_NOT_ALLOWED, e.getMessage(), null);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<BaseResponse<List<String>>> handleMethodArgumentNotValidException(
+            @NotNull MethodArgumentNotValidException e
+    ) {
+        log.warn("[EXCEPTION] 参数校验错误 | 错误 {} 个 ", e.getBindingResult().getErrorCount());
+        e.getFieldErrors().stream().toList().forEach(
+                it -> log.debug("\t\t<{}>[{}]: {}", it.getField(), it.getRejectedValue(), it.getDefaultMessage())
+        );
+        return ResultUtil.error(
+                ErrorCode.REQUEST_BODY_PARAMETERS_ERROR,
+                e.getAllErrors().stream().map(ObjectError::getDefaultMessage).toList().get(0),
+                e.getAllErrors().stream().map(ObjectError::getDefaultMessage).toList()
+        );
+    }
 }

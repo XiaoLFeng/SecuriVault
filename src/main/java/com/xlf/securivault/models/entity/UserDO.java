@@ -34,8 +34,10 @@
 
 package com.xlf.securivault.models.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -50,65 +52,67 @@ import java.util.UUID;
  * @author xiao_lfeng
  */
 @Data
+@Accessors(chain = true)
 @TableName("xf_user")
 public class UserDO {
     /**
      * 用户识别码
      */
-    @TableId(value = "uuid", type = IdType.AUTO)
-    private UUID uuid;
+    @TableId(value = "uuid")
+    private String uuid;
 
     /**
      * 用户名
      */
-    @TableField("username")
     private String username;
 
     /**
      * 昵称
      */
-    @TableField("nickname")
     private String nickname;
 
     /**
      * 邮箱
      */
-    @TableField("email")
     private String email;
 
     /**
      * 手机
      */
-    @TableField("phone")
     private String phone;
 
     /**
      * 角色uuid(ruuid)
      */
-    @TableField("role")
     private UUID role;
 
     /**
      * 密码
      */
-    @TableField("password")
-    private Integer password;
+    private String password;
 
     /**
      * 旧密码
      */
-    @TableField("old_password")
-    private Integer oldPassword;
+    private String oldPassword;
+
+    /**
+     * 是否启用
+     */
+    private Boolean enabled;
+
+    /**
+     * 是否封禁
+     */
+    private Boolean banned;
 
     /**
      * 创建时间
      */
-    @TableField(value = "created_at", fill = FieldFill.INSERT)
     private Timestamp createdAt;
 
     /**
      * 更新时间
      */
-    @TableField(value = "updated_at", fill = FieldFill.INSERT_UPDATE)
     private Timestamp updatedAt;
 }

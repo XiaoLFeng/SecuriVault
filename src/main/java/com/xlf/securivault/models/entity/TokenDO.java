@@ -32,27 +32,46 @@
  * *******************************************************************************
  */
 
--- 角色表
-create table xf_role
-(
-    ruuid        varchar(36)                    not null
-        constraint xf_role_pk
-            primary key,
-    name         varchar(30)             not null,
-    display_name varchar(30),
-    description  varchar(255),
-    created_at   timestamp default now() not null,
-    updated_at   timestamp
-);
+package com.xlf.securivault.models.entity;
 
-comment on table xf_role is '角色表';
-comment on column xf_role.ruuid is '角色 uuid';
-comment on column xf_role.name is '角色名';
-comment on column xf_role.display_name is '角色展示名';
-comment on column xf_role.description is '展示名';
-comment on column xf_role.created_at is '创建时间';
-comment on column xf_role.updated_at is '更新时间';
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-create unique index xf_role_name_uindex
-    on xf_role (name);
+import java.sql.Timestamp;
 
+/**
+ * 用户授权表
+ * <hr/>
+ * 用于定义用户授权表，用于定义用户的授权信息；
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ * @author xiao_lfeng
+ */
+@Data
+@Accessors(chain = true)
+@TableName("xf_token")
+public class TokenDO {
+    /**
+     * 授权 uuid
+     */
+    @TableId(value = "token")
+    private String token;
+
+    /**
+     * 用户 uuid
+     */
+    private String uuid;
+
+    /**
+     * 创建时间
+     */
+    private Timestamp createdAt;
+
+    /**
+     * 过期时间
+     */
+    private Timestamp expiredAt;
+}

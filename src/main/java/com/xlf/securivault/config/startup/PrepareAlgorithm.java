@@ -34,7 +34,7 @@
 
 package com.xlf.securivault.config.startup;
 
-import com.xlf.securivault.utility.util;
+import com.xlf.securivault.utility.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -118,7 +118,7 @@ class PrepareAlgorithm {
             log.debug("[STARTUP] 创建角色 [{}]{} - {}", roleName, displayName, description);
             jdbcTemplate.update(
                     "INSERT INTO public.xf_role (ruuid, name, display_name, description) VALUES (?,?,?,?)",
-                    util.generateUuid(),
+                    Util.generateUuid(),
                     roleName,
                     displayName,
                     description

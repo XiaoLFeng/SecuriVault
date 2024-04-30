@@ -34,6 +34,8 @@
 
 package com.xlf.securivault.constant;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,5 +49,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SystemConfigurationVariable {
-    public static String VERSION;
+    @Getter
+    @Setter
+    private static String version;
 }

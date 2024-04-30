@@ -32,31 +32,20 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.utility;
+package com.xlf.securivault.mappers;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.UUID;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.xlf.securivault.models.entity.InfoDO;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 工具类
+ * 信息映射器
  * <hr/>
- * 用于定义一些工具类，用于定义一些工具类；
+ * 用于定义信息映射器，用于定义信息的数据库操作；
  *
- * @since 1.0.0
- * @version 1.0.0
+ * @since v1.0.0
+ * @version v1.0.0
  * @author xiao_lfeng
  */
-public class util {
-
-    /**
-     * 生成一个 UUID
-     * <hr/>
-     * 生成一个 UUID; 用于生成数据库所需要的随机 UUID
-     *
-     * @return UUID
-     */
-    public static @NotNull UUID generateUuid() {
-        return UUID.randomUUID();
-    }
-}
+@Mapper
+public interface InfoMapper extends BaseMapper<InfoDO> { }

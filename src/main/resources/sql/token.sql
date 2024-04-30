@@ -32,27 +32,22 @@
  * *******************************************************************************
  */
 
--- 角色表
-create table xf_role
+-- 用户授权表
+create table xf_token
 (
-    ruuid        varchar(36)                    not null
-        constraint xf_role_pk
+    token      varchar(36)                    not null
+        constraint xf_token_pk
             primary key,
-    name         varchar(30)             not null,
-    display_name varchar(30),
-    description  varchar(255),
-    created_at   timestamp default now() not null,
-    updated_at   timestamp
+    uuid       varchar(36)                    not null
+        constraint xf_token_xf_user_uuid_fk
+            references xf_user,
+    created_at timestamp default now() not null,
+    expired_at timestamp               not null
 );
 
-comment on table xf_role is '角色表';
-comment on column xf_role.ruuid is '角色 uuid';
-comment on column xf_role.name is '角色名';
-comment on column xf_role.display_name is '角色展示名';
-comment on column xf_role.description is '展示名';
-comment on column xf_role.created_at is '创建时间';
-comment on column xf_role.updated_at is '更新时间';
-
-create unique index xf_role_name_uindex
-    on xf_role (name);
-
+comment on table xf_token is '用户授权表';
+comment on column xf_token.token is '授权 uuid';
+comment on column xf_token.uuid is '用户 uuid';
+comment on constraint xf_token_xf_user_uuid_fk on xf_token is '用户 uuid 外键约束';
+comment on column xf_token.created_at is '创建时间';
+comment on column xf_token.expired_at is '过期时间';

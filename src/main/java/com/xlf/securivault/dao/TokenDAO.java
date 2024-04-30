@@ -32,27 +32,52 @@
  * *******************************************************************************
  */
 
--- 角色表
-create table xf_role
-(
-    ruuid        varchar(36)                    not null
-        constraint xf_role_pk
-            primary key,
-    name         varchar(30)             not null,
-    display_name varchar(30),
-    description  varchar(255),
-    created_at   timestamp default now() not null,
-    updated_at   timestamp
-);
+package com.xlf.securivault.dao;
 
-comment on table xf_role is '角色表';
-comment on column xf_role.ruuid is '角色 uuid';
-comment on column xf_role.name is '角色名';
-comment on column xf_role.display_name is '角色展示名';
-comment on column xf_role.description is '展示名';
-comment on column xf_role.created_at is '创建时间';
-comment on column xf_role.updated_at is '更新时间';
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xlf.securivault.mappers.TokenMapper;
+import com.xlf.securivault.models.entity.TokenDO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
-create unique index xf_role_name_uindex
-    on xf_role (name);
+/**
+ * Token 数据访问对象
+ * <hr/>
+ * Token 数据访问对象，用于处理 Token 数据的访问；
+ *
+ * @since v1.0.0
+ * @version v1.0.0
+ * @author xiao_lfeng
+ */
+@Slf4j
+@Repository
+@RequiredArgsConstructor
+public class TokenDAO extends ServiceImpl<TokenMapper, TokenDO> implements IService<TokenDO> {
 
+    /**
+     * 通过 Token 获取 Token 信息
+     * <hr/>
+     * 通过 Token 获取 Token 信息；
+     *
+     * @param token Token
+     * @return Token 信息
+     */
+    public TokenDO getTokenByToken(String token) {
+        return this.lambdaQuery()
+                .eq(TokenDO::getToken, token)
+                .one();
+    }
+
+    /**
+     * 保存 Token
+     * <hr/>
+     * 保存 Token；
+     *
+     * @param tokenDO Token 信息
+     */
+    public void saveToken(TokenDO tokenDO) {
+        this.save(tokenDO);
+    }
+}

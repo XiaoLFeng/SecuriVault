@@ -32,27 +32,63 @@
  * *******************************************************************************
  */
 
--- 角色表
-create table xf_role
-(
-    ruuid        varchar(36)                    not null
-        constraint xf_role_pk
-            primary key,
-    name         varchar(30)             not null,
-    display_name varchar(30),
-    description  varchar(255),
-    created_at   timestamp default now() not null,
-    updated_at   timestamp
-);
+package com.xlf.securivault.utility;
 
-comment on table xf_role is '角色表';
-comment on column xf_role.ruuid is '角色 uuid';
-comment on column xf_role.name is '角色名';
-comment on column xf_role.display_name is '角色展示名';
-comment on column xf_role.description is '展示名';
-comment on column xf_role.created_at is '创建时间';
-comment on column xf_role.updated_at is '更新时间';
+import org.jetbrains.annotations.NotNull;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
-create unique index xf_role_name_uindex
-    on xf_role (name);
+import java.util.Base64;
+import java.util.UUID;
 
+/**
+ * 工具类
+ * <hr/>
+ * 用于定义一些工具类，用于定义一些工具类；
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ * @author xiao_lfeng
+ */
+public class Util {
+
+    /**
+     * 生成一个 UUID
+     * <hr/>
+     * 生成一个 UUID; 用于生成数据库所需要的随机 UUID
+     *
+     * @return UUID
+     */
+    public static @NotNull UUID generateUuid() {
+        return UUID.randomUUID();
+    }
+
+    /**
+     * 加密密码
+     * <hr/>
+     * 用于加密密码；用于加密用户的密码；加密方法为 Base64 + BCrypt
+     *
+     * @param password 密码
+     * @return 加密后的密码
+     */
+    public static @NotNull String enPassword(@NotNull String password) {
+        String base64Password = Base64.getEncoder().encodeToString(password.getBytes());
+        return BCrypt.hashpw(base64Password, BCrypt.gensalt());
+    }
+
+    /**
+     * 检查密码
+     * <hr/>
+     * 用于检查密码；用于检查用户的密码是否正确；加密方法为 Base64 + BCrypt
+     *
+     * @param password     密码
+     * @param hashPassword 加密后的密码
+     * @return 是否正确
+     */
+    public static boolean checkPassword(
+            @NotNull String password,
+            @NotNull String hashPassword
+    ) {
+        String base64Password = Base64.getEncoder().encodeToString(password.getBytes());
+        return BCrypt.checkpw(base64Password, hashPassword);
+    }
+}

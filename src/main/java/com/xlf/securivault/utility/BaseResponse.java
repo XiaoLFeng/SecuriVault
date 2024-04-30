@@ -34,13 +34,28 @@
 
 package com.xlf.securivault.utility;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+
 /**
  * 基础响应
  * <hr/>
  * 所有响应的基类，用于封装响应的基本信息；这是所有输出的标准接口，所有的响应都应该调用这个类；
  *
+ * @param <E> 数据类型
  * @author xiao_lfeng
  * @version 1.0.0
  * @since 1.0.0
  */
-public record BaseResponse<E>(String output, Integer code, String message, String errorMessage, E data) { }
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@RequiredArgsConstructor
+public class BaseResponse<E> {
+    private final String output;
+    private final Integer code;
+    private final String message;
+    private final String errorMessage;
+    private final E data;
+}
+

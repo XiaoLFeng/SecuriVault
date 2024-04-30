@@ -6,8 +6,8 @@ spring:
       driver-class-name: org.postgresql.Driver
 logging:
   file:
-    name: '/.logs/securivault.log'
+    path: .logs/
   level:
     root: error
-    com.xlf: debug
-    com.xlf.mappers: info
+    com.xlf.securivault: debug
+    com.xlf.securivault.mappers: info
