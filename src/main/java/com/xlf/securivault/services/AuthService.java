@@ -44,9 +44,9 @@ import java.util.UUID;
  * <hr/>
  * 用于定义认证服务，用于定义认证服务；用于处理用户的认证信息；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 public interface AuthService {
     /**
@@ -64,7 +64,7 @@ public interface AuthService {
      * <hr/>
      * 用于用户登录；用户支持用户名、邮箱、手机号登录；
      *
-     * @param user 用户名
+     * @param user     用户名
      * @param password 密码
      * @return 返回登录成功的用户信息
      */
@@ -99,4 +99,15 @@ public interface AuthService {
      * @return 返回注册成功的用户信息
      */
     UserCurrentDTO userRegister(AuthRegisterVO authRegisterVO);
+
+    /**
+     * 重置密码
+     * <hr/>
+     * 用于重置密码；
+     *
+     * @param email       邮箱
+     * @param newPassword 新密码
+     * @return 是否重置成功
+     */
+    boolean resetPassword(String email, String newPassword);
 }

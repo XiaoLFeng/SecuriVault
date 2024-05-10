@@ -69,7 +69,7 @@ public class RequestHeaderFilter implements Filter {
         try {
             // 检查请求头是否为 application/json
             if (!"application/json".equals(req.getContentType())) {
-                throw new RequestHeaderNotMatchException("请求 application/json 类型错误");
+                throw new RequestHeaderNotMatchException("请求类型需要为 application/json");
             }
             // 检查请求头是否包含正确的 User-Agent
             if (req.getHeader("User-Agent") == null || req.getHeader("User-Agent").isEmpty()) {
@@ -79,13 +79,13 @@ public class RequestHeaderFilter implements Filter {
         } catch (RequestHeaderNotMatchException e) {
             Gson gson = new Gson();
             res.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-            res.setContentType("application/json");
+            res.setContentType("application/json;charset=UTF-8");
             res.getWriter()
                     .write(
                             gson.toJson(ResultUtil.error(
                                     ErrorCode.REQUEST_METHOD_NOT_ALLOWED,
                                     e.getMessage(),
-                                    null)
+                                    null).getBody()
                             )
                     );
         }

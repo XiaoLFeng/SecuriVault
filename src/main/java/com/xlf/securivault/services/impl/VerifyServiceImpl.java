@@ -32,46 +32,53 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.config.configuration;
+package com.xlf.securivault.services.impl;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.xlf.securivault.dao.EmailVerifyCodeDAO;
+import com.xlf.securivault.models.entity.EmailVerifyCodeDO;
+import com.xlf.securivault.services.VerifyService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 /**
- * MyBatisPlus配置类
+ * 验证服务接口
  * <hr/>
- * 用于配置MyBatisPlus的一些配置, 例如分页插件等;
+ * 用于定义验证服务接口；手机验证或者邮箱验证；
  *
  * @since v1.0.0
  * @version v1.0.0
+ * @see VerifyService
  * @author xiao_lfeng
  */
 @Slf4j
-@Configuration
-public class MybatisPlusConfig {
+@Service
+@RequiredArgsConstructor
+public class VerifyServiceImpl implements VerifyService {
+
+    private final EmailVerifyCodeDAO emailVerifyCodeDAO;
 
     /**
-     * MyBatisPlus分页插件
+     * 检查邮箱验证码是否过期
      * <hr/>
-     * 用于配置MyBatisPlus的分页插件, 用于分页查询; 该插件会自动拦截分页查询的请求, 并进行分页查询
+     * 用于检查邮箱验证码是否过期；根据用户的邮箱和验证码进行查询之后进行检查；
      *
-     * @return 分页
+     * @param email      邮箱
+     * @param verifyCode 验证码
+     * @return 是否过期
      */
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        log.debug("[CONFIG] MyBatisPlus 分页配置初始化...");
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-
-        // 分页
-        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
-        paginationInnerInterceptor.setMaxLimit(20L);
-        paginationInnerInterceptor.setDbType(DbType.POSTGRE_SQL);
-
-        interceptor.addInnerInterceptor(paginationInnerInterceptor);
-        return interceptor;
+    @Override
+    public boolean checkEmailVerifyCodeHasExpired(String email, String verifyCode) {
+        EmailVerifyCodeDO getVerifyCode = emailVerifyCodeDAO.getVerifyCodeByCode(verifyCode);
+        if (getVerifyCode == null) {
+            return false;
+        } else {
+            // 如果验证码过期则删除
+            if (getVerifyCode.getExpiredAt().getTime() < System.currentTimeMillis()) {
+                emailVerifyCodeDAO.removeById(getVerifyCode.getId());
+                return false;
+            }
+        }
+        return getVerifyCode.getEmail().equals(email);
     }
 }

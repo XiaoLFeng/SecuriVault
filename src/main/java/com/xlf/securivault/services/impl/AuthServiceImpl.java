@@ -219,4 +219,25 @@ public class AuthServiceImpl implements AuthService {
         userCurrentDTO.setUuid(UUID.fromString(userDO.getUuid()));
         return userCurrentDTO;
     }
+
+    /**
+     * 重置密码
+     * <hr/>
+     * 用于重置密码；
+     *
+     * @param email       邮箱
+     * @param newPassword 新密码
+     * @return 是否重置成功
+     */
+    @Override
+    public boolean resetPassword(String email, String newPassword) {
+        UserDO getUser = userDAO.getUserByEmail(email);
+        if (getUser != null) {
+            getUser.setPassword(Util.enPassword(newPassword));
+            userDAO.updateById(getUser);
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

@@ -32,46 +32,27 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.config.configuration;
+package com.xlf.securivault.dao;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xlf.securivault.mappers.PhoneVerifyCodeMapper;
+import com.xlf.securivault.models.entity.PhoneVerifyCodeDO;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 /**
- * MyBatisPlus配置类
+ * 手机验证码DAO
  * <hr/>
- * 用于配置MyBatisPlus的一些配置, 例如分页插件等;
+ * 用于定义手机验证码DAO，用于定义手机验证码DAO；
  *
  * @since v1.0.0
  * @version v1.0.0
  * @author xiao_lfeng
  */
-@Slf4j
-@Configuration
-public class MybatisPlusConfig {
-
-    /**
-     * MyBatisPlus分页插件
-     * <hr/>
-     * 用于配置MyBatisPlus的分页插件, 用于分页查询; 该插件会自动拦截分页查询的请求, 并进行分页查询
-     *
-     * @return 分页
-     */
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        log.debug("[CONFIG] MyBatisPlus 分页配置初始化...");
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-
-        // 分页
-        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
-        paginationInnerInterceptor.setMaxLimit(20L);
-        paginationInnerInterceptor.setDbType(DbType.POSTGRE_SQL);
-
-        interceptor.addInnerInterceptor(paginationInnerInterceptor);
-        return interceptor;
-    }
+@Repository
+@RequiredArgsConstructor
+public class PhoneVerifyCodeDAO
+        extends ServiceImpl<PhoneVerifyCodeMapper, PhoneVerifyCodeDO>
+        implements IService<PhoneVerifyCodeDO> {
 }

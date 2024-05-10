@@ -32,46 +32,40 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.config.configuration;
+package com.xlf.securivault.services;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.Map;
 
 /**
- * MyBatisPlus配置类
+ * 邮件服务
  * <hr/>
- * 用于配置MyBatisPlus的一些配置, 例如分页插件等;
+ * 用于定义邮件服务，用于定义邮件服务；用于处理邮件相关的服务；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
-@Slf4j
-@Configuration
-public class MybatisPlusConfig {
+public interface MailService {
 
     /**
-     * MyBatisPlus分页插件
+     * 发送邮件
      * <hr/>
-     * 用于配置MyBatisPlus的分页插件, 用于分页查询; 该插件会自动拦截分页查询的请求, 并进行分页查询
+     * 用于发送邮件；
      *
-     * @return 分页
+     * @param email    邮箱
+     * @param template 模板
      */
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        log.debug("[CONFIG] MyBatisPlus 分页配置初始化...");
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+    void sendMail(String email, String template, Map<String, Object>parameter) throws MessagingException;
 
-        // 分页
-        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
-        paginationInnerInterceptor.setMaxLimit(20L);
-        paginationInnerInterceptor.setDbType(DbType.POSTGRE_SQL);
-
-        interceptor.addInnerInterceptor(paginationInnerInterceptor);
-        return interceptor;
-    }
+    /**
+     * 发送重置密码邮件
+     * <hr/>
+     * 用于发送重置密码邮件；
+     *
+     * @param mailTo       邮件接收者
+     */
+    void sendResetPasswordMail(String mailTo, HttpServletRequest request);
 }

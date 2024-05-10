@@ -67,7 +67,7 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
-        log.info("[CONFIG] SpringSecurity 安全配置开始配置");
+        log.info("[CONFIG] 安全配置初始化...");
         security
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -76,7 +76,6 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                         .anyRequest().permitAll()
                 );
-        log.info("[CONFIG] SpringSecurity SecurityFilterChain | 安全配置配置成功");
         return security.build();
     }
 

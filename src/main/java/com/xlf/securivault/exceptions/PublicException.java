@@ -34,16 +34,14 @@
 
 package com.xlf.securivault.exceptions;
 
-import com.xlf.securivault.exceptions.library.PageNotFoundedException;
-import com.xlf.securivault.exceptions.library.RequestBodyParametersException;
-import com.xlf.securivault.exceptions.library.RequestHeaderNotMatchException;
-import com.xlf.securivault.exceptions.library.SystemParameterError;
+import com.xlf.securivault.exceptions.library.*;
 import com.xlf.securivault.utility.BaseResponse;
 import com.xlf.securivault.utility.ErrorCode;
 import com.xlf.securivault.utility.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -233,6 +231,14 @@ public class PublicException {
         return ResultUtil.error(ErrorCode.REQUEST_METHOD_NOT_ALLOWED, e.getMessage(), null);
     }
 
+    /**
+     * 参数校验错误处理
+     * <hr/>
+     * 用于处理参数校验错误, 当参数校验错误发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 参数校验错误 MethodArgumentNotValidException
+     * @return 返回异常信息
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponse<List<String>>> handleMethodArgumentNotValidException(
             @NotNull MethodArgumentNotValidException e
@@ -246,5 +252,37 @@ public class PublicException {
                 e.getAllErrors().stream().map(ObjectError::getDefaultMessage).toList().get(0),
                 e.getAllErrors().stream().map(ObjectError::getDefaultMessage).toList()
         );
+    }
+
+    /**
+     * 邮件模板不存在异常处理
+     * <hr/>
+     * 用于处理邮件模板不存在异常, 当邮件模板不存在异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 邮件模板不存在异常 MailTemplateNotFoundException
+     * @return 返回异常信息
+     */
+    @ExceptionHandler(MailTemplateNotFoundException.class)
+    public ResponseEntity<BaseResponse<MailTemplateNotFoundException>> handleMailTemplateNotFoundException(
+            @NotNull MailTemplateNotFoundException e
+    ) {
+        log.warn("[EXCEPTION] 邮件模板不存在 | {}", e.getMessage());
+        return ResultUtil.error(ErrorCode.MAIL_ERROR, "邮件模板 " + e.getMessage() + " 不存在", null);
+    }
+
+    /**
+     * 邮件发送异常处理
+     * <hr/>
+     * 用于处理邮件发送异常, 当邮件发送异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 邮件发送异常 MailSendException
+     * @return 返回异常信息
+     */
+    @ExceptionHandler(MailSendException.class)
+    public ResponseEntity<BaseResponse<MailSendException>> handleMailSendException(
+            @NotNull MailSendException e
+    ) {
+        log.error("[EXCEPTION] 邮件发送异常 | {}", e.getMessage(), e);
+        return ResultUtil.error(ErrorCode.MAIL_ERROR, "邮件发送异常", e);
     }
 }

@@ -40,14 +40,20 @@ import com.xlf.securivault.models.dto.UserCurrentDTO;
 import com.xlf.securivault.models.dto.UserLoginDTO;
 import com.xlf.securivault.models.vo.AuthLoginVO;
 import com.xlf.securivault.models.vo.AuthRegisterVO;
+import com.xlf.securivault.models.vo.AuthResetPasswordVO;
+import com.xlf.securivault.models.vo.MailResetPasswordVO;
 import com.xlf.securivault.services.AuthService;
+import com.xlf.securivault.services.MailService;
+import com.xlf.securivault.services.VerifyService;
 import com.xlf.securivault.utility.BaseResponse;
 import com.xlf.securivault.utility.ErrorCode;
 import com.xlf.securivault.utility.ResultUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,6 +72,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthService authService;
+    private final MailService mailService;
+    private final VerifyService verifyService;
 
     /**
      * 用户登录
@@ -77,7 +85,7 @@ public class AuthController {
      * @param userToken   用户 Token
      * @return 返回用户登录信息
      */
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<BaseResponse<UserLoginDTO>> authLogin(
             @RequestBody @Validated AuthLoginVO authLoginVO,
             @RequestHeader(value = "Authorization", required = false) String userToken
@@ -104,6 +112,14 @@ public class AuthController {
             throw new BusinessException("用户 " + authLoginVO.getUser() + " 不存在", ErrorCode.USER_NOT_EXIST);
         }
     }
+
+    /*@PostMapping("/login-biometrics")
+    public ResponseEntity<BaseResponse<UserLoginDTO>> authLoginBiometrics(
+            @RequestBody @Validated AuthLoginVO authLoginVO,
+            @RequestHeader(value = "Authorization", required = false) String userToken
+    ) {
+        return null;
+    }*/
 
     /**
      * 用户注册
@@ -141,5 +157,75 @@ public class AuthController {
         } else {
             throw new BusinessException("用户创建失败", ErrorCode.USER_NOT_EXIST);
         }
+    }
+
+    /**
+     * 重置密码
+     * <hr/>
+     * 重置密码，用于用户忘记密码时，重置密码；
+     * 如果用户已经登录，将会返回用户的登录信息；
+     *
+     * @param authResetPasswordVO 重置密码信息
+     * @param verifyCode          用户的验证码
+     * @param email               用户的邮箱
+     * @return 返回用户登录信息
+     */
+    @Transactional
+    @PutMapping("/reset-password")
+    public ResponseEntity<BaseResponse<Void>> resetPassword(
+            @RequestBody @Validated AuthResetPasswordVO authResetPasswordVO,
+            @RequestParam(value = "code") String verifyCode,
+            @RequestParam(value = "mail") String email
+    ) {
+        // 检查 email 是否为邮箱
+        if (!email.matches("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$")) {
+            throw new BusinessException("邮箱格式错误", ErrorCode.OPERATION_FAILED);
+        }
+        // 检查密码是否一致
+        if (!authResetPasswordVO.getNewPassword().equals(authResetPasswordVO.getRepeatNewPassword())) {
+            throw new BusinessException("密码不一致", ErrorCode.OPERATION_FAILED);
+        }
+        // 检查校验码
+        if (verifyService.checkEmailVerifyCodeHasExpired(email, verifyCode)) {
+            throw new BusinessException("校验码不存在或已过期", ErrorCode.VERIFY_CODE_ERROR);
+        }
+        // 重置密码
+        if (authService.resetPassword(email, authResetPasswordVO.getNewPassword())) {
+            return ResultUtil.success("密码重置成功");
+        } else {
+            throw new BusinessException("密码重置失败", ErrorCode.OPERATION_FAILED);
+        }
+    }
+
+    /**
+     * 发送重置密码邮件
+     * <hr/>
+     * 发送重置密码邮件，用于用户忘记密码时，发送重置密码邮件；
+     * 如果用户已经登录，将会返回用户的登录信息；
+     *
+     * @param mailResetPasswordVO 重置密码邮件信息
+     * @param userToken           用户 Token
+     * @return 返回是否发送右键
+     */
+    @Transactional
+    @GetMapping("/reset-password/mail")
+    public ResponseEntity<BaseResponse<Void>> resetPasswordMail(
+            @RequestBody @Validated MailResetPasswordVO mailResetPasswordVO,
+            @RequestHeader(value = "Authorization", required = false) String userToken,
+            HttpServletRequest request
+    ) {
+        // 检查用户的授权认证是否有效
+        if (userToken != null && !userToken.isEmpty()) {
+            if (authService.checkUserToken(userToken)) {
+                UserLoginDTO getUser = (UserLoginDTO) authService.userLoginWithToken(userToken);
+                getUser.setToken(userToken);
+                throw new BusinessException("用户已登录，无需发送重置密码邮件", ErrorCode.LOGIN_ACCESS);
+            } else {
+                throw new UserAuthenticationException("授权 Token 无效或已过期");
+            }
+        }
+        // 发送重置密码邮件
+        mailService.sendResetPasswordMail(mailResetPasswordVO.getMailTo(), request);
+        return ResultUtil.success("邮件发送成功");
     }
 }

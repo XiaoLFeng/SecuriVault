@@ -34,17 +34,17 @@
 
 package com.xlf.securivault.config.configuration;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 /**
- * MyBatisPlus配置类
+ * 邮件配置
  * <hr/>
- * 用于配置MyBatisPlus的一些配置, 例如分页插件等;
+ * 用于定义邮件配置，用于定义邮件服务的配置；
  *
  * @since v1.0.0
  * @version v1.0.0
@@ -52,26 +52,37 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-public class MybatisPlusConfig {
+public class MailConfig {
+    @Value("${spring.mail.username}")
+    private String username;
+    @Value("${spring.mail.password}")
+    private String password;
+    @Value("${spring.mail.host}")
+    private String host;
+    @Value("${spring.mail.default-encoding}")
+    private String defaultEncoding;
 
     /**
-     * MyBatisPlus分页插件
+     * 邮件发送器
      * <hr/>
-     * 用于配置MyBatisPlus的分页插件, 用于分页查询; 该插件会自动拦截分页查询的请求, 并进行分页查询
+     * 用于配置邮件发送器，用于配置邮件发送器的相关信息
      *
-     * @return 分页
+     * @return 邮件发送器
      */
     @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        log.debug("[CONFIG] MyBatisPlus 分页配置初始化...");
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+    public JavaMailSender mailSender() {
+        log.info("[CONFIG] 邮件服务初始化...");
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setDefaultEncoding(defaultEncoding);
+        mailSender.setHost(host);
+        mailSender.setPort(25);
+        mailSender.setUsername(username);
+        mailSender.setPassword(password);
+        mailSender.getJavaMailProperties().setProperty("mail.smtp.auth", "true");
+        mailSender.getJavaMailProperties().setProperty("mail.smtp.starttls.enable", "true");
+        mailSender.getJavaMailProperties().setProperty("mail.debug", "false");
+        mailSender.getJavaMailProperties().setProperty("mail.transport.protocol", "smtp");
 
-        // 分页
-        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor();
-        paginationInnerInterceptor.setMaxLimit(20L);
-        paginationInnerInterceptor.setDbType(DbType.POSTGRE_SQL);
-
-        interceptor.addInnerInterceptor(paginationInnerInterceptor);
-        return interceptor;
+        return mailSender;
     }
 }

@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.Base64;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -90,5 +91,24 @@ public class Util {
     ) {
         String base64Password = Base64.getEncoder().encodeToString(password.getBytes());
         return BCrypt.checkpw(base64Password, hashPassword);
+    }
+
+    /**
+     * 生成随机数
+     * <hr/>
+     * 用于生成随机数；用于生成验证码、随机数等；
+     *
+     * @param size 验证码长度
+     * @return 随机数
+     */
+    public static @NotNull String generateRandString(int size) {
+        String str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        Random random = new Random();
+        StringBuilder randString = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            int number = random.nextInt(62);
+            randString.append(str.charAt(number));
+        }
+        return randString.toString();
     }
 }

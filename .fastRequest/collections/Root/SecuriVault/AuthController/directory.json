@@ -1,0 +1,11 @@
+{
+	"pmResponseId":"",
+	"filePath":"/.fastRequest/collections/Root/SecuriVault/AuthController/",
+	"name":"AuthController",
+	"apifoxFolderId":33390746,
+	"description":"",
+	"type":3,
+	"directory":"/.fastRequest/collections/Root/SecuriVault/AuthController",
+	"classDescription":"登录控制器 <hr/> 登录控制器，用于处理登录相关的请求；",
+	"pmRequestId":""
+}
