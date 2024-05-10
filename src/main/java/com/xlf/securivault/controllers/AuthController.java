@@ -39,6 +39,7 @@ import com.xlf.securivault.exceptions.library.UserAuthenticationException;
 import com.xlf.securivault.models.dto.UserCurrentDTO;
 import com.xlf.securivault.models.dto.UserLoginDTO;
 import com.xlf.securivault.models.vo.AuthLoginVO;
+import com.xlf.securivault.models.vo.AuthRegisterVO;
 import com.xlf.securivault.services.AuthService;
 import com.xlf.securivault.utility.BaseResponse;
 import com.xlf.securivault.utility.ErrorCode;
@@ -73,7 +74,7 @@ public class AuthController {
      * 如果用户已经登录，将会返回用户的登录信息；
      *
      * @param authLoginVO 用户登录信息
-     * @param userToken 用户 Token
+     * @param userToken   用户 Token
      * @return 返回用户登录信息
      */
     @GetMapping("/login")
@@ -104,4 +105,41 @@ public class AuthController {
         }
     }
 
+    /**
+     * 用户注册
+     * <hr/>
+     * 用户注册，用于用户注册；
+     * 如果用户已经登录，将会返回用户的登录信息；
+     *
+     * @param authRegisterVO 用户注册信息
+     * @param userToken      用户 Token
+     * @return 返回用户登录信息
+     */
+    @PostMapping("/register")
+    public ResponseEntity<BaseResponse<UserLoginDTO>> authRegister(
+            @RequestBody @Validated AuthRegisterVO authRegisterVO,
+            @RequestHeader(value = "Authorization", required = false) String userToken
+    ) {
+        // 检查用户的授权认证是否有效
+        if (userToken != null && !userToken.isEmpty()) {
+            if (authService.checkUserToken(userToken)) {
+                UserLoginDTO getUser = (UserLoginDTO) authService.userLoginWithToken(userToken);
+                getUser.setToken(userToken);
+                return ResultUtil.success("认证依然有效", getUser);
+            } else {
+                throw new UserAuthenticationException("授权 Token 无效或已过期");
+            }
+        }
+        // 用户注册
+        UserCurrentDTO getCurrentUser = authService.userRegister(authRegisterVO);
+        if (getCurrentUser != null) {
+            UserLoginDTO getUser = new UserLoginDTO();
+            BeanUtils.copyProperties(getCurrentUser, getUser);
+            // 生成 Token
+            getUser.setToken(authService.generateUserToken(getUser).toString());
+            return ResultUtil.success("注册成功", getUser);
+        } else {
+            throw new BusinessException("用户创建失败", ErrorCode.USER_NOT_EXIST);
+        }
+    }
 }

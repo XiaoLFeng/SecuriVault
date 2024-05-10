@@ -32,71 +32,47 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.services;
+package com.xlf.securivault.models.vo;
 
-import com.xlf.securivault.models.dto.UserCurrentDTO;
-import com.xlf.securivault.models.vo.AuthRegisterVO;
-
-import java.util.UUID;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * 认证服务
+ * 认证注册视图对象
  * <hr/>
- * 用于定义认证服务，用于定义认证服务；用于处理用户的认证信息；
+ * 用于定义认证注册视图对象，用于定义认证注册的视图对象；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
-public interface AuthService {
+@Getter
+@Setter
+public class AuthRegisterVO {
     /**
-     * 检查用户Token
-     * <hr/>
-     * 用于检查用户Token是否有效；
-     *
-     * @param userToken 用户Token
-     * @return 是否有效
+     * 用户名
      */
-    boolean checkUserToken(String userToken);
-
+    @Pattern(regexp = "^[a-zA-Z0-9_-]{4,30}$", message = "用户名格式不正确")
+    private String username;
     /**
-     * 用户登录
-     * <hr/>
-     * 用于用户登录；用户支持用户名、邮箱、手机号登录；
-     *
-     * @param user 用户名
-     * @param password 密码
-     * @return 返回登录成功的用户信息
+     * 邮箱
      */
-    UserCurrentDTO userLogin(String user, String password);
-
+    @Email(message = "邮箱格式不正确")
+    private String email;
     /**
-     * 获取用户信息
-     * <hr/>
-     * 使用用户的 Token 获取用户信息；
-     *
-     * @param userToken 用户Token
-     * @return 返回登录成功的用户信息
+     * 手机号
      */
-    UserCurrentDTO userLoginWithToken(String userToken);
-
+    @Pattern(
+            regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$",
+            message = "手机号格式不正确"
+    )
+    private String phone;
     /**
-     * 生成用户Token
-     * <hr/>
-     * 用于生成用户Token；
-     *
-     * @param getUser 用户信息
-     * @return 返回生成的用户Token
+     * 密码
      */
-    UUID generateUserToken(UserCurrentDTO getUser);
-
-    /**
-     * 用户注册
-     * <hr/>
-     * 用于用户注册；
-     *
-     * @param authRegisterVO 用户注册信息
-     * @return 返回注册成功的用户信息
-     */
-    UserCurrentDTO userRegister(AuthRegisterVO authRegisterVO);
+    @NotBlank(message = "密码不能为空")
+    private String password;
 }

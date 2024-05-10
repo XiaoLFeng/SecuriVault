@@ -34,12 +34,15 @@
 
 package com.xlf.securivault.services.impl;
 
+import com.xlf.securivault.dao.RoleDAO;
 import com.xlf.securivault.dao.TokenDAO;
 import com.xlf.securivault.dao.UserDAO;
 import com.xlf.securivault.exceptions.BusinessException;
 import com.xlf.securivault.models.dto.UserCurrentDTO;
+import com.xlf.securivault.models.entity.RoleDO;
 import com.xlf.securivault.models.entity.TokenDO;
 import com.xlf.securivault.models.entity.UserDO;
+import com.xlf.securivault.models.vo.AuthRegisterVO;
 import com.xlf.securivault.services.AuthService;
 import com.xlf.securivault.utility.ErrorCode;
 import com.xlf.securivault.utility.Util;
@@ -58,9 +61,9 @@ import java.util.UUID;
  * <hr/>
  * 用于定义认证服务，用于定义认证服务；用于处理用户的认证信息；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Slf4j
 @Service
@@ -69,6 +72,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserDAO userDAO;
     private final TokenDAO tokenDAO;
+    private final RoleDAO roleDAO;
 
     /**
      * 检查用户Token
@@ -174,5 +178,45 @@ public class AuthServiceImpl implements AuthService {
         // 存入数据库
         tokenDAO.saveToken(tokenDO);
         return userToken;
+    }
+
+    /**
+     * 用户注册
+     * <hr/>
+     * 用于用户注册；
+     *
+     * @param authRegisterVO 用户注册信息
+     * @return 返回注册成功的用户信息
+     */
+    @Override
+    public UserCurrentDTO userRegister(@NotNull AuthRegisterVO authRegisterVO) {
+        // 判断用户是否存在
+        if (userDAO.getUserByUsername(authRegisterVO.getUsername()) != null) {
+            throw new BusinessException("用户 " + authRegisterVO.getUsername() + " 已存在", ErrorCode.USER_EXIST);
+        }
+        // 判断邮箱是否存在
+        if (userDAO.getUserByEmail(authRegisterVO.getEmail()) != null) {
+            throw new BusinessException("邮箱 " + authRegisterVO.getEmail() + " 已存在", ErrorCode.USER_EXIST);
+        }
+        // 判断手机号是否存在
+        if (userDAO.getUserByPhone(authRegisterVO.getPhone()) != null) {
+            throw new BusinessException("手机号 " + authRegisterVO.getPhone() + " 已存在", ErrorCode.USER_EXIST);
+        }
+        // 获取普通用户角色
+        RoleDO getDefaultRole = roleDAO.getRoleByName("default");
+        // 处理用户注册
+        UserDO userDO = new UserDO()
+                .setUuid(Util.generateUuid().toString())
+                .setUsername(authRegisterVO.getUsername())
+                .setPassword(Util.enPassword(authRegisterVO.getPassword()))
+                .setEmail(authRegisterVO.getEmail())
+                .setPhone(authRegisterVO.getPhone())
+                .setRole(UUID.fromString(getDefaultRole.getRuuid()));
+        // 存入数据库
+        userDAO.saveUser(userDO);
+        UserCurrentDTO userCurrentDTO = new UserCurrentDTO();
+        BeanUtils.copyProperties(userDO, userCurrentDTO);
+        userCurrentDTO.setUuid(UUID.fromString(userDO.getUuid()));
+        return userCurrentDTO;
     }
 }

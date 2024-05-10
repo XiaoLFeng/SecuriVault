@@ -32,71 +32,39 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.services;
+package com.xlf.securivault.dao;
 
-import com.xlf.securivault.models.dto.UserCurrentDTO;
-import com.xlf.securivault.models.vo.AuthRegisterVO;
-
-import java.util.UUID;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xlf.securivault.mappers.RoleMapper;
+import com.xlf.securivault.models.entity.RoleDO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 
 /**
- * 认证服务
+ * 角色数据访问对象
  * <hr/>
- * 用于定义认证服务，用于定义认证服务；用于处理用户的认证信息；
+ * 用于定义角色数据访问对象，用于定义角色的数据库操作；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
-public interface AuthService {
-    /**
-     * 检查用户Token
-     * <hr/>
-     * 用于检查用户Token是否有效；
-     *
-     * @param userToken 用户Token
-     * @return 是否有效
-     */
-    boolean checkUserToken(String userToken);
+@Slf4j
+@Repository
+@RequiredArgsConstructor
+public class RoleDAO extends ServiceImpl<RoleMapper, RoleDO> implements IService<RoleDO> {
 
     /**
-     * 用户登录
-     * <hr/>
-     * 用于用户登录；用户支持用户名、邮箱、手机号登录；
+     * 通过角色名称获取角色信息
      *
-     * @param user 用户名
-     * @param password 密码
-     * @return 返回登录成功的用户信息
+     * @param aDefault 角色名称
+     * @return 角色信息
      */
-    UserCurrentDTO userLogin(String user, String password);
-
-    /**
-     * 获取用户信息
-     * <hr/>
-     * 使用用户的 Token 获取用户信息；
-     *
-     * @param userToken 用户Token
-     * @return 返回登录成功的用户信息
-     */
-    UserCurrentDTO userLoginWithToken(String userToken);
-
-    /**
-     * 生成用户Token
-     * <hr/>
-     * 用于生成用户Token；
-     *
-     * @param getUser 用户信息
-     * @return 返回生成的用户Token
-     */
-    UUID generateUserToken(UserCurrentDTO getUser);
-
-    /**
-     * 用户注册
-     * <hr/>
-     * 用于用户注册；
-     *
-     * @param authRegisterVO 用户注册信息
-     * @return 返回注册成功的用户信息
-     */
-    UserCurrentDTO userRegister(AuthRegisterVO authRegisterVO);
+    public RoleDO getRoleByName(String aDefault) {
+        return this.lambdaQuery()
+                .eq(RoleDO::getName, aDefault)
+                .one();
+    }
 }

@@ -113,4 +113,15 @@ public class UserDAO extends ServiceImpl<UserMapper, UserDO> implements IService
                 .eq(UserDO::getUuid, uuid)
                 .one();
     }
+
+    /**
+     * 插入一个用户操作
+     * <hr/>
+     * 插入一个 {@code UserDO} 对象，填入必要参数后提交即可创建一个用户
+     *
+     * @param userDO 用户表对象实体类
+     */
+    public void saveUser(UserDO userDO) {
+        this.save(userDO);
+    }
 }
