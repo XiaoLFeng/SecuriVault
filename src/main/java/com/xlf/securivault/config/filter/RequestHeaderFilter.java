@@ -50,11 +50,11 @@ import java.io.IOException;
  * <hr/>
  * 用于过滤请求头，对请求头进行处理；
  *
+ * @author xiao_lfeng
  * @version 1.0.0
- * @since 1.0.0
  * @see Filter
  * @see com.xlf.securivault.config.configuration.SecurityConfig
- * @author xiao_lfeng
+ * @since 1.0.0
  */
 public class RequestHeaderFilter implements Filter {
 
@@ -68,7 +68,9 @@ public class RequestHeaderFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         try {
             // 检查请求头是否为 application/json
-            if (!"application/json".equals(req.getContentType())) {
+            boolean checkHasSwaggerApi = req.getRequestURI().matches("/v3/api\\S+$")
+                    || req.getRequestURI().matches("/swagger\\S+$");
+            if (!"application/json".equals(req.getContentType()) && !checkHasSwaggerApi) {
                 throw new RequestHeaderNotMatchException("请求类型需要为 application/json");
             }
             // 检查请求头是否包含正确的 User-Agent

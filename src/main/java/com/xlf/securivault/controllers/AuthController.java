@@ -58,9 +58,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 登录控制器
+ * 授权控制器
  * <hr/>
- * 登录控制器，用于处理登录相关的请求；
+ * 授权控制器，用于处理登录相关的请求；
  *
  * @author xiao_lfeng
  * @version 1.0.0
