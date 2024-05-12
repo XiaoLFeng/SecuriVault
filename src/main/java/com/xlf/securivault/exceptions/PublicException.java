@@ -285,4 +285,20 @@ public class PublicException {
         log.error("[EXCEPTION] 邮件发送异常 | {}", e.getMessage(), e);
         return ResultUtil.error(ErrorCode.MAIL_ERROR, "邮件发送异常", e);
     }
+
+    /**
+     * 用户认证异常处理
+     * <hr/>
+     * 用于处理用户认证异常, 当用户认证异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 用户认证异常 UserAuthenticationException
+     * @return 返回异常信息
+     */
+    @ExceptionHandler(UserAuthenticationException.class)
+    public ResponseEntity<BaseResponse<UserAuthenticationException>> handleUserAuthenticationException(
+            @NotNull UserAuthenticationException e
+    ) {
+        log.error("[EXCEPTION] 用户认证异常 | {}", e.getMessage(), e);
+        return ResultUtil.error(ErrorCode.USER_NOT_LOGIN, "Token 授权不存在或已过期", e);
+    }
 }

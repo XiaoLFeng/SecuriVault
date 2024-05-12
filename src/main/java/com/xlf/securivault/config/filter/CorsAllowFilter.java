@@ -32,54 +32,45 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.config.configuration;
+package com.xlf.securivault.config.filter;
 
-import com.xlf.securivault.config.filter.CorsAllowFilter;
-import com.xlf.securivault.config.filter.RequestHeaderFilter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 /**
- * 安全配置
+ * 跨域过滤器
  * <hr/>
- * 用于配置安全相关的配置信息，包括安全拦截器、安全过滤器等；
+ * 用于处理跨域请求；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version 1.0.0
+ * @see Filter
+ * @since 1.0.0
  */
-@Slf4j
-@Configuration
-public class SecurityConfig {
+public class CorsAllowFilter implements Filter {
 
-    /**
-     * 安全过滤器
-     * <hr/>
-     * 用于配置安全过滤器，用于配置安全过滤器的相关信息
-     *
-     * @param security 安全，用于配置安全相关的信息
-     * @return 安全过滤器
-     * @throws Exception 异常
-     */
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
-        log.info("[CONFIG] 安全配置初始化...");
-        security
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new RequestHeaderFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new CorsAllowFilter(), RequestHeaderFilter.class)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().permitAll()
-                );
-        return security.build();
+    @Override
+    public void doFilter(
+            ServletRequest request, ServletResponse response,
+            @NotNull FilterChain chain
+    ) throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+        // 设置允许跨域的配置
+        res.setContentType("application/json;charset=UTF-8");
+        res.setCharacterEncoding("UTF-8");
+        res.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
+        res.setHeader("Access-Control-Allow-Headers", "*");
+        res.setHeader("Access-Control-Allow-Methods", "*");
+        // 放行OPTIONS请求
+        if ("OPTIONS".equals(req.getMethod())) {
+            res.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+        chain.doFilter(request, response);
     }
-
 }

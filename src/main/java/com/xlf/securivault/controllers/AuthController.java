@@ -96,8 +96,6 @@ public class AuthController {
                 UserLoginDTO getUser = (UserLoginDTO) authService.userLoginWithToken(userToken);
                 getUser.setToken(userToken);
                 return ResultUtil.success("登录依然有效", getUser);
-            } else {
-                throw new UserAuthenticationException("授权 Token 无效或已过期");
             }
         }
         // 用户登录
