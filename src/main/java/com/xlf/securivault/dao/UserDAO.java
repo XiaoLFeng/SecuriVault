@@ -42,8 +42,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 /**
  * 用户数据访问对象
  * <hr/>
@@ -108,7 +106,7 @@ public class UserDAO extends ServiceImpl<UserMapper, UserDO> implements IService
      * @param uuid UUID
      * @return 用户映射表
      */
-    public UserDO getUserByUuid(UUID uuid) {
+    public UserDO getUserByUuid(String uuid) {
         return this.lambdaQuery()
                 .eq(UserDO::getUuid, uuid)
                 .one();

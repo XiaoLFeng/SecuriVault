@@ -39,8 +39,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 /**
  * 返回用户当前对象
  * <hr/>
@@ -58,7 +56,7 @@ public class UserCurrentDTO {
     /**
      * 用户UUID
      */
-    private UUID uuid;
+    private String uuid;
     /**
      * 用户名
      */

@@ -111,4 +111,16 @@ public class Util {
         }
         return randString.toString();
     }
+
+    /**
+     * 替换 Token 中的 Bearer
+     * <hr/>
+     * 用于替换 Token 中的 Bearer；用于替换 Token 中的 Bearer; 用于获取 Token 本身
+     *
+     * @param token Token
+     * @return 替换后的 Token
+     */
+    public static @NotNull String tokenReplaceBearer(@NotNull String token) {
+        return token.replace("Bearer ", "");
+    }
 }

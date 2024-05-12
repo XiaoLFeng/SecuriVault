@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public boolean checkUserToken(String userToken) {
-        TokenDO getToken = tokenDAO.getTokenByToken(userToken);
+        TokenDO getToken = tokenDAO.getTokenByToken(Util.tokenReplaceBearer(userToken));
         if (getToken != null) {
             return getToken.getExpiredAt().after(new Date());
         } else {
@@ -122,7 +122,6 @@ public class AuthServiceImpl implements AuthService {
                 if (Util.checkPassword(password, getUser.getPassword())) {
                     UserCurrentDTO userCurrentDTO = new UserCurrentDTO();
                     BeanUtils.copyProperties(getUser, userCurrentDTO);
-                    userCurrentDTO.setUuid(UUID.fromString(getUser.getUuid()));
                     return userCurrentDTO;
                 } else {
                     throw new BusinessException("用户密码错误", ErrorCode.WRONG_PASSWORD);
@@ -142,20 +141,19 @@ public class AuthServiceImpl implements AuthService {
      * @return 返回登录成功的用户信息
      */
     @Override
-    public UserCurrentDTO userLoginWithToken(String userToken) {
-        TokenDO getToken = tokenDAO.getTokenByToken(userToken);
-        if (getToken != null) {
-            UserDO getUser = userDAO.getUserByUuid(UUID.fromString(getToken.getUuid()));
-            if (getUser != null) {
-                UserCurrentDTO userCurrentDTO = new UserCurrentDTO();
-                BeanUtils.copyProperties(getUser, userCurrentDTO);
-                return userCurrentDTO;
-            } else {
-                return null;
+    public UserCurrentDTO userLoginWithToken(@NotNull String userToken) {
+        if (!userToken.isBlank()) {
+            TokenDO getToken = tokenDAO.getTokenByToken(Util.tokenReplaceBearer(userToken));
+            if (getToken != null) {
+                UserDO getUser = userDAO.getUserByUuid(getToken.getUuid());
+                if (getUser != null) {
+                    UserCurrentDTO userCurrentDTO = new UserCurrentDTO();
+                    BeanUtils.copyProperties(getUser, userCurrentDTO);
+                    return userCurrentDTO;
+                }
             }
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -216,7 +214,6 @@ public class AuthServiceImpl implements AuthService {
         userDAO.saveUser(userDO);
         UserCurrentDTO userCurrentDTO = new UserCurrentDTO();
         BeanUtils.copyProperties(userDO, userCurrentDTO);
-        userCurrentDTO.setUuid(UUID.fromString(userDO.getUuid()));
         return userCurrentDTO;
     }
 

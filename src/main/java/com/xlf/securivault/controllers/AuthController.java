@@ -48,6 +48,7 @@ import com.xlf.securivault.services.VerifyService;
 import com.xlf.securivault.utility.BaseResponse;
 import com.xlf.securivault.utility.ErrorCode;
 import com.xlf.securivault.utility.ResultUtil;
+import com.xlf.securivault.utility.Util;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,10 +92,11 @@ public class AuthController {
             @RequestHeader(value = "Authorization", required = false) String userToken
     ) {
         // 检查用户的授权认证是否有效
-        if (userToken != null && !userToken.isEmpty()) {
+        if (userToken != null && !userToken.isBlank()) {
             if (authService.checkUserToken(userToken)) {
-                UserLoginDTO getUser = (UserLoginDTO) authService.userLoginWithToken(userToken);
-                getUser.setToken(userToken);
+                UserLoginDTO getUser = new UserLoginDTO();
+                BeanUtils.copyProperties(authService.userLoginWithToken(userToken), getUser);
+                getUser.setToken(Util.tokenReplaceBearer(userToken));
                 return ResultUtil.success("登录依然有效", getUser);
             }
         }
