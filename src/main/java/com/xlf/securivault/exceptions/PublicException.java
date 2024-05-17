@@ -299,6 +299,6 @@ public class PublicException {
             @NotNull UserAuthenticationException e
     ) {
         log.error("[EXCEPTION] 用户认证异常 | {}", e.getMessage(), e);
-        return ResultUtil.error(ErrorCode.USER_NOT_LOGIN, "Token 授权不存在或已过期", e);
+        return ResultUtil.error(ErrorCode.USER_NOT_LOGIN, "Token 授权不存在或已过期", null);
     }
 }

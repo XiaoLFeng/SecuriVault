@@ -58,14 +58,14 @@ public interface MailService {
      * @param email    邮箱
      * @param template 模板
      */
-    void sendMail(String email, String template, Map<String, Object>parameter) throws MessagingException;
+    void sendMail(String email, String template, Map<String, Object> parameter) throws MessagingException;
 
     /**
      * 发送重置密码邮件
      * <hr/>
      * 用于发送重置密码邮件；
      *
-     * @param mailTo       邮件接收者
+     * @param mailTo 邮件接收者
      */
     void sendResetPasswordMail(String mailTo, HttpServletRequest request);
 }

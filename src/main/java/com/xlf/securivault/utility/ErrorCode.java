@@ -42,9 +42,9 @@ import lombok.RequiredArgsConstructor;
  * <hr/>
  * 用于定义系统中的错误码信息, 该类用于定义系统中的错误码信息，用于统一管理系统中的错误码信息
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Getter
 @RequiredArgsConstructor

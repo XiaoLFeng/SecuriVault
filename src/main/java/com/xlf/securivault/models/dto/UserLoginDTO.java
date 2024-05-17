@@ -44,9 +44,9 @@ import lombok.Setter;
  * <hr/>
  * 用于定义用户当前对象，用于返回用户登录的信息；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Getter
 @Setter

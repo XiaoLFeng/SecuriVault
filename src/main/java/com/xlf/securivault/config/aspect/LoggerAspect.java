@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
  * <hr/>
  * 用于记录系统中的日志信息，用于记录系统中的日志信息，该日志信息包含了系统中的操作信息、操作时间、操作人员等信息；
  *
- * @since 1.0.0
- * @version 1.0.0
  * @author xiao_lfeng
+ * @version 1.0.0
+ * @since 1.0.0
  */
 @Slf4j
 @Aspect

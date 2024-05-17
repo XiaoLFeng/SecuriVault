@@ -35,7 +35,7 @@
 -- 角色表
 create table xf_role
 (
-    ruuid        varchar(36)                    not null
+    ruuid        varchar(36)             not null
         constraint xf_role_pk
             primary key,
     name         varchar(30)             not null,

@@ -46,10 +46,10 @@ import org.springframework.stereotype.Service;
  * <hr/>
  * 用于定义验证服务接口；手机验证或者邮箱验证；
  *
- * @since v1.0.0
+ * @author xiao_lfeng
  * @version v1.0.0
  * @see VerifyService
- * @author xiao_lfeng
+ * @since v1.0.0
  */
 @Slf4j
 @Service

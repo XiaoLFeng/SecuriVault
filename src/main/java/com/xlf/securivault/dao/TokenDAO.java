@@ -47,9 +47,9 @@ import org.springframework.stereotype.Repository;
  * <hr/>
  * Token 数据访问对象，用于处理 Token 数据的访问；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Slf4j
 @Repository

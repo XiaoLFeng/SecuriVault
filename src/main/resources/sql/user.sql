@@ -35,15 +35,13 @@
 -- 用户表
 create table xf_user
 (
-    uuid         varchar(36)                    not null
-        constraint xf_user_pk
+    uuid         varchar(36)             not null constraint xf_user_pk
             primary key,
     username     varchar(30)             not null,
     nickname     varchar(30),
     email        varchar                 not null,
     phone        varchar(11)             not null,
-    role         varchar(36)
-        constraint xf_user_xf_role_ruuid_fk
+    role         varchar(36) constraint xf_user_xf_role_ruuid_fk
             references xf_role
             on update cascade on delete set default,
     password     varchar                 not null,

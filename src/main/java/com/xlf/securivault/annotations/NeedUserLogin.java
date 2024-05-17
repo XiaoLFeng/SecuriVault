@@ -9,9 +9,9 @@ import java.lang.annotation.*;
  * 用来标记该接口需要登录才能访问，如果用户未登录则会被拦截，返回未登录的错误信息，如果用户已登录则会继续访问
  * 该注解只允许标记在方法上, 不允许标记在类上
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Documented
 @Target(ElementType.METHOD)

@@ -46,9 +46,9 @@ import org.springframework.stereotype.Repository;
  * <hr/>
  * 用于定义邮箱验证码DAO，用于定义邮箱验证码DAO；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Repository
 @RequiredArgsConstructor

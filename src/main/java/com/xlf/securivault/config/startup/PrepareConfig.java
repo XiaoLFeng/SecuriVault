@@ -151,9 +151,9 @@ public class PrepareConfig {
                         String.class
                 );
                 jdbcTemplate.update("""
-                        INSERT INTO public.xf_user (uuid, username, password, email, phone, role)
-                        VALUES (?, ?, ?, ?, ?, ?)
-                        """,
+                                INSERT INTO public.xf_user (uuid, username, password, email, phone, role)
+                                VALUES (?, ?, ?, ?, ?, ?)
+                                """,
                         Util.generateUuid(),
                         "admin",
                         Util.enPassword("admin"),

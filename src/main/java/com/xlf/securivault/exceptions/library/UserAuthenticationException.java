@@ -39,9 +39,9 @@ package com.xlf.securivault.exceptions.library;
  * <hr/>
  * 用于定义用户认证异常，用于定义用户认证异常；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 public class UserAuthenticationException extends RuntimeException {
     public UserAuthenticationException(String message) {

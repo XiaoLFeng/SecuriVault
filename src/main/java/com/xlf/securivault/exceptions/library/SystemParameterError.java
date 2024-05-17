@@ -7,10 +7,10 @@ import lombok.Getter;
  * <hr/>
  * 当系统参数错误时，抛出此异常, 用于处理系统参数错误
  *
- * @version 1.0.0
- * @since 1.0.0
- * @see com.xlf.securivault.exceptions.PublicException
  * @author xiao_lfeng
+ * @version 1.0.0
+ * @see com.xlf.securivault.exceptions.PublicException
+ * @since 1.0.0
  */
 @Getter
 public class SystemParameterError extends RuntimeException {
@@ -25,7 +25,7 @@ public class SystemParameterError extends RuntimeException {
      * 构造一个系统参数错误异常, 用于处理系统参数错误
      *
      * @param message 异常信息
-     * @param data 附加数据
+     * @param data    附加数据
      */
     public SystemParameterError(String message, Object data) {
         super(message);

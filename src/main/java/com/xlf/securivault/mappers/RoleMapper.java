@@ -43,9 +43,9 @@ import org.apache.ibatis.annotations.Mapper;
  * <hr/>
  * 用于定义角色映射器，用于定义角色的映射器；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Mapper
 public interface RoleMapper extends BaseMapper<RoleDO> {

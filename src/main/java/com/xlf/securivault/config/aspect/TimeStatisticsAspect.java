@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
  * 用于统计接口请求时间的切面，用于统计接口请求的时间，包括接口请求的开始时间、结束时间等；该接口主要用于对接口请求的时间进行统计；
  * 对接口进行分析，优化接口请求时间，提高接口请求的效率；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Slf4j
 @Aspect

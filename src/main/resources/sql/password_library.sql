@@ -35,15 +35,15 @@
 -- 密码库
 create table xf_password_library
 (
-    id       varchar(36)    not null
+    id       varchar(36) not null
         constraint xf_password_library_pk
             primary key,
-    uuid     varchar(36)    not null
+    uuid     varchar(36) not null
         constraint xf_password_library_xf_user_uuid_fk
             references xf_user
             on update cascade on delete cascade,
-    website  varchar not null,
-    username varchar not null,
+    website  varchar     not null,
+    username varchar     not null,
     password varchar,
     other    json
 );

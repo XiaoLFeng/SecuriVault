@@ -32,27 +32,53 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.exceptions.library;
+package com.xlf.securivault.controllers;
+
+import com.xlf.securivault.exceptions.library.UserAuthenticationException;
+import com.xlf.securivault.models.dto.UserCurrentDTO;
+import com.xlf.securivault.services.UserService;
+import com.xlf.securivault.utility.BaseResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 邮件模板未找到异常
+ * 用户控制器
  * <hr/>
- * 用于定义邮件模板未找到异常；
+ * 用户控制器，用于处理用户相关的请求；
  *
  * @author xiao_lfeng
  * @version v1.0.0
- * @see RuntimeException
  * @since v1.0.0
  */
-public class MailTemplateNotFoundException extends RuntimeException {
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/user")
+public class UserController {
+    private final UserService userService;
+
     /**
-     * 构造函数
+     * 获取当前用户信息
      * <hr/>
-     * 用于构造邮件模板未找到异常；
+     * 获取当前用户信息，用于获取当前用户的信息；
      *
-     * @param message 异常信息
+     * @return 当前用户信息
      */
-    public MailTemplateNotFoundException(String message) {
-        super(message);
+    @GetMapping("/current")
+    public ResponseEntity<BaseResponse<UserCurrentDTO>> userCurrent(
+            @NotNull @RequestHeader("X-USER-UUID") String userUuid,
+            @NotNull @RequestHeader("Authorization") String userToken
+    ) {
+        if (!userUuid.isBlank() && !userToken.isBlank()) {
+            return userService.getUserCurrent(userUuid, userToken);
+        } else {
+            throw new UserAuthenticationException("获取当前用户信息失败");
+        }
     }
 }

@@ -170,7 +170,7 @@ public class AuthServiceImpl implements AuthService {
         UUID userToken = Util.generateUuid();
         TokenDO tokenDO = new TokenDO()
                 .setToken(userToken.toString())
-                .setUuid(getUser.getUuid().toString())
+                .setUuid(getUser.getUuid())
                 .setCreatedAt(new Timestamp(System.currentTimeMillis()))
                 .setExpiredAt(new Timestamp(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
         // 存入数据库

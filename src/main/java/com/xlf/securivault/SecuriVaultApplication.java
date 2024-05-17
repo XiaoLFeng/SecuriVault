@@ -45,8 +45,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * Springboot启动
  *
  * @author xiao_lfeng
- * @since v1.0.0
  * @version v1.0.0
+ * @since v1.0.0
  */
 @EnableAsync
 @EnableScheduling

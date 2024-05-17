@@ -32,27 +32,61 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.exceptions.library;
+package com.xlf.securivault.services.impl;
+
+import com.xlf.securivault.dao.TokenDAO;
+import com.xlf.securivault.dao.UserDAO;
+import com.xlf.securivault.exceptions.library.UserAuthenticationException;
+import com.xlf.securivault.models.dto.UserCurrentDTO;
+import com.xlf.securivault.models.entity.TokenDO;
+import com.xlf.securivault.models.entity.UserDO;
+import com.xlf.securivault.services.UserService;
+import com.xlf.securivault.utility.BaseResponse;
+import com.xlf.securivault.utility.ResultUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 /**
- * 邮件模板未找到异常
+ * 用户服务实现
  * <hr/>
- * 用于定义邮件模板未找到异常；
+ * 用户服务实现，用于实现用户服务；
  *
  * @author xiao_lfeng
  * @version v1.0.0
- * @see RuntimeException
  * @since v1.0.0
  */
-public class MailTemplateNotFoundException extends RuntimeException {
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+    private final UserDAO userDAO;
+    private final TokenDAO tokenDAO;
+
     /**
-     * 构造函数
-     * <hr/>
-     * 用于构造邮件模板未找到异常；
+     * 获取当前用户
      *
-     * @param message 异常信息
+     * @param userUuid  用户UUID
+     * @param userToken 用户Token
+     * @return 用户信息
      */
-    public MailTemplateNotFoundException(String message) {
-        super(message);
+    @Override
+    public ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid, String userToken) {
+        // 检查登录是否有效
+        TokenDO getToken = tokenDAO.getTokenByToken(userToken);
+        if (getToken != null) {
+            UserDO getUser = userDAO.getUserByUuid(userUuid);
+            if (getUser != null) {
+                UserCurrentDTO userCurrentDTO = new UserCurrentDTO();
+                BeanUtils.copyProperties(getUser, userCurrentDTO);
+                return ResultUtil.success("获取当前用户信息成功", userCurrentDTO);
+            } else {
+                throw new UserAuthenticationException("获取当前用户信息失败");
+            }
+        } else {
+            throw new UserAuthenticationException("获取当前用户信息失败");
+        }
     }
 }

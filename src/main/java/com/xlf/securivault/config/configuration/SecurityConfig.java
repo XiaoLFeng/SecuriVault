@@ -49,9 +49,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * <hr/>
  * 用于配置安全相关的配置信息，包括安全拦截器、安全过滤器等；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Slf4j
 @Configuration

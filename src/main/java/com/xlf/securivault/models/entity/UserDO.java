@@ -47,9 +47,9 @@ import java.util.UUID;
  * <hr/>
  * 用于定义用户表，用于定义用户的基本信息；
  *
- * @since 1.0.0
- * @version 1.0.0
  * @author xiao_lfeng
+ * @version 1.0.0
+ * @since 1.0.0
  */
 @Data
 @Accessors(chain = true)

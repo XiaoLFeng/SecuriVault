@@ -46,9 +46,9 @@ import org.springframework.context.annotation.Configuration;
  * <hr/>
  * 用于配置MyBatisPlus的一些配置, 例如分页插件等;
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Slf4j
 @Configuration

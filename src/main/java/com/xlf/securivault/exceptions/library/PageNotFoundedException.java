@@ -9,10 +9,10 @@ import lombok.Setter;
  * <hr/>
  * 当页面未找到时，抛出此异常, 用于处理页面未找到的情况
  *
- * @version 1.0.0
- * @since 1.0.0
- * @see com.xlf.securivault.exceptions.PublicException
  * @author xiao_lfeng
+ * @version 1.0.0
+ * @see com.xlf.securivault.exceptions.PublicException
+ * @since 1.0.0
  */
 @Setter
 @Getter

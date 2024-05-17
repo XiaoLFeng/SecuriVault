@@ -35,10 +35,10 @@
 -- 用户授权表
 create table xf_token
 (
-    token      varchar(36)                    not null
+    token      varchar(36)             not null
         constraint xf_token_pk
             primary key,
-    uuid       varchar(36)                    not null
+    uuid       varchar(36)             not null
         constraint xf_token_xf_user_uuid_fk
             references xf_user,
     created_at timestamp default now() not null,

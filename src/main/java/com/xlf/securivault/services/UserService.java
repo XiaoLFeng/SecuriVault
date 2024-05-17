@@ -32,27 +32,28 @@
  * *******************************************************************************
  */
 
-package com.xlf.securivault.exceptions.library;
+package com.xlf.securivault.services;
+
+import com.xlf.securivault.models.dto.UserCurrentDTO;
+import com.xlf.securivault.utility.BaseResponse;
+import org.springframework.http.ResponseEntity;
 
 /**
- * 邮件模板未找到异常
+ * 用户服务
  * <hr/>
- * 用于定义邮件模板未找到异常；
+ * 用户服务，用于定义用户服务；
  *
  * @author xiao_lfeng
  * @version v1.0.0
- * @see RuntimeException
  * @since v1.0.0
  */
-public class MailTemplateNotFoundException extends RuntimeException {
+public interface UserService {
     /**
-     * 构造函数
-     * <hr/>
-     * 用于构造邮件模板未找到异常；
+     * 获取当前用户
      *
-     * @param message 异常信息
+     * @param userUuid  用户UUID
+     * @param userToken 用户Token
+     * @return 用户信息
      */
-    public MailTemplateNotFoundException(String message) {
-        super(message);
-    }
+    ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid, String userToken);
 }

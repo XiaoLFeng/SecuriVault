@@ -46,9 +46,9 @@ import java.util.UUID;
  * <hr/>
  * 用于定义一些工具类，用于定义一些工具类；
  *
- * @since 1.0.0
- * @version 1.0.0
  * @author xiao_lfeng
+ * @version 1.0.0
+ * @since 1.0.0
  */
 public class Util {
 

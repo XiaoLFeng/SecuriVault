@@ -14,10 +14,10 @@ import java.util.Objects;
  * <hr/>
  * 用于请求体参数异常的异常类，用于请求体参数异常时抛出异常
  *
- * @since v1.0.0
+ * @author xiao_lfeng
  * @version v1.0.0
  * @see com.xlf.securivault.exceptions.PublicException
- * @author xiao_lfeng
+ * @since v1.0.0
  */
 @Getter
 public class RequestBodyParametersException extends RuntimeException {
@@ -37,7 +37,7 @@ public class RequestBodyParametersException extends RuntimeException {
     /**
      * 构造方法
      *
-     * @param message 异常信息
+     * @param message       异常信息
      * @param bindingResult 绑定结果
      */
     public RequestBodyParametersException(String message, BindingResult bindingResult) {

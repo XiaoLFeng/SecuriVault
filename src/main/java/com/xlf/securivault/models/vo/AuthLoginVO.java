@@ -43,9 +43,9 @@ import lombok.Setter;
  * <hr/>
  * 用于定义用户登录对象，用于接收用户登录的请求参数；
  *
- * @since 1.0.0
- * @version 1.0.0
  * @author xiao_lfeng
+ * @version 1.0.0
+ * @since 1.0.0
  */
 @Getter
 @Setter

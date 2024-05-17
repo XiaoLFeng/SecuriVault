@@ -43,10 +43,11 @@ import lombok.Setter;
  * <hr/>
  * 用于定义重置密码邮件值对象，用于定义重置密码邮件的值对象；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Setter
 @Getter
-public class MailResetPasswordVO extends BaseMailVO { }
+public class MailResetPasswordVO extends BaseMailVO {
+}

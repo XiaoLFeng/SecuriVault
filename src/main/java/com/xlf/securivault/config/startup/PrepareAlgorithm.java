@@ -52,9 +52,9 @@ import java.nio.charset.StandardCharsets;
  * <hr/>
  * 用于定义系统启动时的准备算法，用于定义系统启动时的准备算法;
  *
- * @since 1.0.0
- * @version 1.0.0
  * @author xiao_lfeng
+ * @version 1.0.0
+ * @since 1.0.0
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -110,14 +110,14 @@ class PrepareAlgorithm {
     public void roleCheck(String roleName, String displayName, String description) {
         try {
             jdbcTemplate.queryForObject(
-                    "SELECT name FROM public.xf_role WHERE name = ?",
+                    "SELECT name FROM xf_role WHERE name = ?",
                     String.class,
                     roleName
             );
         } catch (DataAccessException e) {
             log.debug("[STARTUP] 创建角色 [{}]{} - {}", roleName, displayName, description);
             jdbcTemplate.update(
-                    "INSERT INTO public.xf_role (ruuid, name, display_name, description) VALUES (?,?,?,?)",
+                    "INSERT INTO xf_role (ruuid, name, display_name, description) VALUES (?,?,?,?)",
                     Util.generateUuid(),
                     roleName,
                     displayName,

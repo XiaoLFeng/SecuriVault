@@ -46,9 +46,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
  * <hr/>
  * 用于定义邮件配置，用于定义邮件服务的配置；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Slf4j
 @Configuration

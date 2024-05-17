@@ -43,9 +43,10 @@ import org.apache.ibatis.annotations.Mapper;
  * <hr/>
  * 用于定义信息映射器，用于定义信息的数据库操作；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Mapper
-public interface InfoMapper extends BaseMapper<InfoDO> { }
+public interface InfoMapper extends BaseMapper<InfoDO> {
+}

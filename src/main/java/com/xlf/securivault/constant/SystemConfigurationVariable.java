@@ -43,9 +43,9 @@ import org.springframework.stereotype.Component;
  * <hr/>
  * 用于定义系统配置变量，用于定义系统配置变量；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Component
 public class SystemConfigurationVariable {
