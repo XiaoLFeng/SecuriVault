@@ -32,37 +32,75 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.services;
+package com.xlf.securivault.controllers;
 
-import com.xlf.securivault.models.dto.UserCurrentDTO;
+import com.xlf.securivault.constant.SystemConfigurationVariable;
+import com.xlf.securivault.exceptions.BusinessException;
 import com.xlf.securivault.models.vo.IndexInitialAdminVO;
+import com.xlf.securivault.services.UserService;
 import com.xlf.securivault.utility.BaseResponse;
+import com.xlf.securivault.utility.ErrorCode;
+import com.xlf.securivault.utility.ResultUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
- * 用户服务
+ * 中心控制器
  * <hr/>
- * 用户服务，用于定义用户服务；
+ * 中心控制器，用于处理中心额外的请求；
  *
  * @author xiao_lfeng
  * @version v1.0.0
  * @since v1.0.0
  */
-public interface UserService {
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/")
+public class IndexController {
+    private final UserService userService;
+
     /**
-     * 获取当前用户
+     * 首页
+     * <hr/>
+     * 用于返回首页；
      *
-     * @param userUuid  用户UUID
-     * @param userToken 用户Token
-     * @return 用户信息
+     * @return 首页
      */
-    ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid, String userToken);
+    @GetMapping("/")
+    public ResponseEntity<BaseResponse<Void>> index() {
+        return ResultUtil.success("Welcome to SecuriVault!");
+    }
+
+    /**
+     * 检查是否需要初始化
+     * <hr/>
+     * 用于检查是否需要初始化；引导前端进入初始化页面；
+     *
+     * @return 初始化
+     */
+    @GetMapping("/initialize")
+    public ResponseEntity<BaseResponse<Void>> needToInitialize() {
+        if (SystemConfigurationVariable.getInitialize()) {
+            return ResultUtil.success("系统已经初始化");
+        } else {
+            throw new BusinessException("系统需要初始化", ErrorCode.OPERATION_FAILED);
+        }
+    }
 
     /**
      * 初始化管理员
+     * <hr/>
+     * 用于初始化管理员；
      *
      * @param indexInitialAdminVO 初始化管理员视图对象
      * @return 初始化结果
      */
-    ResponseEntity<BaseResponse<Void>> initialAdmin(IndexInitialAdminVO indexInitialAdminVO);
+    @PostMapping("/initialize/admin")
+    public ResponseEntity<BaseResponse<Void>> initializeAdmin(
+            @RequestBody @Validated IndexInitialAdminVO indexInitialAdminVO
+    ) {
+        return userService.initialAdmin(indexInitialAdminVO);
+    }
 }

@@ -32,37 +32,22 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.services;
+package com.xlf.securivault.dao;
 
-import com.xlf.securivault.models.dto.UserCurrentDTO;
-import com.xlf.securivault.models.vo.IndexInitialAdminVO;
-import com.xlf.securivault.utility.BaseResponse;
-import org.springframework.http.ResponseEntity;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xlf.securivault.mappers.InfoMapper;
+import com.xlf.securivault.models.entity.InfoDO;
+import org.springframework.stereotype.Repository;
 
 /**
- * 用户服务
+ * 信息DAO
  * <hr/>
- * 用户服务，用于定义用户服务；
+ * 信息DAO，用于定义信息DAO；
  *
- * @author xiao_lfeng
- * @version v1.0.0
  * @since v1.0.0
+ * @version v1.0.0
+ * @author xiao_lfeng
  */
-public interface UserService {
-    /**
-     * 获取当前用户
-     *
-     * @param userUuid  用户UUID
-     * @param userToken 用户Token
-     * @return 用户信息
-     */
-    ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid, String userToken);
-
-    /**
-     * 初始化管理员
-     *
-     * @param indexInitialAdminVO 初始化管理员视图对象
-     * @return 初始化结果
-     */
-    ResponseEntity<BaseResponse<Void>> initialAdmin(IndexInitialAdminVO indexInitialAdminVO);
-}
+@Repository
+public class InfoDAO extends ServiceImpl<InfoMapper, InfoDO> implements IService<InfoDO> { }

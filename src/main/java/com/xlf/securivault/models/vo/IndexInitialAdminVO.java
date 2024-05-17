@@ -32,37 +32,34 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.services;
+package com.xlf.securivault.models.vo;
 
-import com.xlf.securivault.models.dto.UserCurrentDTO;
-import com.xlf.securivault.models.vo.IndexInitialAdminVO;
-import com.xlf.securivault.utility.BaseResponse;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * 用户服务
+ * 首页初始化管理员视图对象
  * <hr/>
- * 用户服务，用于定义用户服务；
+ * 首页初始化管理员视图对象，用于接收首页初始化管理员请求的参数；
  *
- * @author xiao_lfeng
- * @version v1.0.0
  * @since v1.0.0
+ * @version v1.0.0
+ * @author xiao_lfeng
  */
-public interface UserService {
-    /**
-     * 获取当前用户
-     *
-     * @param userUuid  用户UUID
-     * @param userToken 用户Token
-     * @return 用户信息
-     */
-    ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid, String userToken);
-
-    /**
-     * 初始化管理员
-     *
-     * @param indexInitialAdminVO 初始化管理员视图对象
-     * @return 初始化结果
-     */
-    ResponseEntity<BaseResponse<Void>> initialAdmin(IndexInitialAdminVO indexInitialAdminVO);
+@Getter
+@Setter
+@NoArgsConstructor
+public class IndexInitialAdminVO {
+    @Pattern(regexp = "^[a-zA-Z0-9_]{4,30}$", message = "用户名格式错误, 请使用字母、数字、下划线，长度为4-30位")
+    private String username;
+    @NotBlank(message = "密码不能为空")
+    private String password;
+    @Email(message = "邮箱格式错误")
+    private String email;
+    @Pattern(regexp = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$", message = "手机号格式错误")
+    private String phone;
 }
