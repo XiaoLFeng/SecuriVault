@@ -34,19 +34,22 @@
 
 package com.xlf.securivault.controllers;
 
+import com.xlf.securivault.annotations.NeedAuthentication;
 import com.xlf.securivault.annotations.NeedUserLogin;
+import com.xlf.securivault.exceptions.BusinessException;
+import com.xlf.securivault.models.dto.PasswordDTO;
+import com.xlf.securivault.models.dto.PasswordSeeDTO;
 import com.xlf.securivault.models.vo.PasswordAddVO;
-import com.xlf.securivault.services.PermissionService;
+import com.xlf.securivault.models.vo.PasswordEditVO;
+import com.xlf.securivault.services.PasswordService;
 import com.xlf.securivault.utility.BaseResponse;
+import com.xlf.securivault.utility.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 密码控制器
@@ -62,7 +65,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/password")
 public class PasswordController {
-    private final PermissionService permissionService;
+    private final PasswordService passwordService;
 
     /**
      * 添加密码
@@ -76,6 +79,89 @@ public class PasswordController {
             @RequestBody @Validated PasswordAddVO passwordAddVO,
             HttpServletRequest request
     ) {
-        return permissionService.addPermission(passwordAddVO, request);
+        return passwordService.addPassword(passwordAddVO, request);
+    }
+
+    /**
+     * 编辑密码
+     *
+     * @param passwordEditVO 密码编辑VO
+     * @return 编辑结果
+     */
+    @NeedUserLogin
+    @NeedAuthentication
+    @PutMapping("/{passwordId}")
+    public ResponseEntity<BaseResponse<Void>> editPassword(
+            @PathVariable String passwordId,
+            @RequestBody @Validated PasswordEditVO passwordEditVO,
+            HttpServletRequest request
+    ) {
+        if (!passwordId.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")) {
+            throw new BusinessException("密码ID格式错误", ErrorCode.REQUEST_PATH_ERROR);
+        }
+        return passwordService.editPassword(passwordEditVO, passwordId, request);
+    }
+
+    /**
+     * 删除密码
+     *
+     * @param passwordId 密码ID
+     * @return 删除结果
+     */
+    @NeedUserLogin
+    @NeedAuthentication
+    @DeleteMapping("/{passwordId}")
+    public ResponseEntity<BaseResponse<Void>> deletePassword(
+            @PathVariable String passwordId,
+            HttpServletRequest request
+    ) {
+        if (!passwordId.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")) {
+            throw new BusinessException("密码ID格式错误", ErrorCode.REQUEST_PATH_ERROR);
+        }
+        return passwordService.deletePassword(passwordId, request);
+    }
+
+    /**
+     * 获取密码
+     *
+     * @param passwordId 密码ID
+     * @return 获取结果
+     */
+    @NeedUserLogin
+    @NeedAuthentication
+    @GetMapping("/{passwordId}")
+    public ResponseEntity<BaseResponse<PasswordSeeDTO>> getPassword(
+            @PathVariable String passwordId,
+            HttpServletRequest request
+    ) {
+        if (!passwordId.matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")) {
+            throw new BusinessException("密码ID格式错误", ErrorCode.REQUEST_PATH_ERROR);
+        }
+        return passwordService.getPassword(passwordId, request);
+    }
+
+    /**
+     * 获取密码列表
+     *
+     * @return 获取结果
+     */
+    @NeedUserLogin
+    @GetMapping("/list")
+    public ResponseEntity<BaseResponse<PasswordDTO>> getPasswords(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String page,
+            @RequestParam(required = false) String size,
+            HttpServletRequest request
+    ) {
+        if (search != null && search.length() > 100) {
+            throw new BusinessException("搜索内容过长", ErrorCode.REQUEST_PARAMETERS_ERROR);
+        }
+        if (page != null && !page.matches("^[1-9]\\d*$")) {
+            throw new BusinessException("页码格式错误", ErrorCode.REQUEST_PARAMETERS_ERROR);
+        }
+        if (size != null && !size.matches("^[1-9]\\d*$")) {
+            throw new BusinessException("每页数量格式错误", ErrorCode.REQUEST_PARAMETERS_ERROR);
+        }
+        return passwordService.getPasswords(search, page, size, request);
     }
 }

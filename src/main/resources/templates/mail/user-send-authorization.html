@@ -37,7 +37,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>重置密码</title>
+    <title>请求认证</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,7 +68,7 @@
             padding: 20px;
         }
 
-        .button {
+        .code {
             display: block;
             width: 200px;
             margin: 20px auto;
@@ -78,6 +78,8 @@
             color: #ffffff;
             text-decoration: none;
             border-radius: 5px;
+            font-size: 20px; /* 调整字体大小 */
+            font-weight: bold; /* 设置字体为粗体 */
         }
 
         .footer {
@@ -91,14 +93,13 @@
 </head>
 <body>
 <div class="email-container">
-    <div class="header"><span th:text="${title}">守护秘匣</span> - 重置密码</div>
+    <div class="header"><span th:text="${title}">守护秘匣</span> - 认证请求</div>
     <div class="content">
         <p>您好 <span th:text="${username}">[用户名]</span></p>
-        <p>我们收到了您重置密码的请求。请点击下面的按钮以设置新密码：</p>
-        <a th:href="${link}" class="button">重置密码</a>
-        <p>重置密码链接 15 分钟有效，如果您没有请求重置密码，请忽略此邮件。</p>
+        <p>我们收到了您的认证请求。请输入下方验证码：</p>
+        <p th:text="${code}" class="code">验证码</p>
+        <p>认证密钥 15 分钟有效，如果您没有进行请求，请忽略此邮件。</p>
         <p>感谢您的使用！</p>
-        <p>若您无法点击按钮，可直接点击链接：<a th:href="${link}" th:text="${link}"></a></p>
     </div>
     <div class="footer">
         <span id="copyright"></span>

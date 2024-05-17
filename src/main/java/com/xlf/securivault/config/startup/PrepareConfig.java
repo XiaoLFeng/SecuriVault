@@ -141,9 +141,12 @@ public class PrepareConfig {
         return args -> {
             log.info("[STARTUP] 检查是否需要生成超级管理员用户");
             try {
-                jdbcTemplate.queryForObject("SELECT uuid FROM public.xf_user WHERE username = 'admin'", String.class);
+                jdbcTemplate.queryForObject(
+                        "SELECT uuid FROM public.xf_user WHERE uuid = '3a2774cc-6192-4744-a705-29896ccfc2c7'",
+                        String.class
+                );
             } catch (DataAccessException e) {
-                log.info("[STARTUP] 未找到超级管理员用户,开始生成admin用户");
+                log.info("[STARTUP] 未找到超级管理员用户,开始生成 admin 用户");
                 log.info("\t用户名: admin");
                 log.info("\t密码: admin");
                 String ruuid = jdbcTemplate.queryForObject(
@@ -154,7 +157,7 @@ public class PrepareConfig {
                                 INSERT INTO public.xf_user (uuid, username, password, email, phone, role)
                                 VALUES (?, ?, ?, ?, ?, ?)
                                 """,
-                        Util.generateUuid(),
+                        "3a2774cc-6192-4744-a705-29896ccfc2c7",
                         "admin",
                         Util.enPassword("admin"),
                         "admin@securivault.com",

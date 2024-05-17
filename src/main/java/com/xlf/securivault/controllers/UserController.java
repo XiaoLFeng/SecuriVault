@@ -39,11 +39,12 @@ import com.xlf.securivault.exceptions.library.UserAuthenticationException;
 import com.xlf.securivault.models.dto.UserCurrentDTO;
 import com.xlf.securivault.services.UserService;
 import com.xlf.securivault.utility.BaseResponse;
-import com.xlf.securivault.utility.Util;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,13 +76,48 @@ public class UserController {
     @NeedUserLogin
     @GetMapping("/current")
     public ResponseEntity<BaseResponse<UserCurrentDTO>> userCurrent(
-            @NotNull @RequestHeader("X-User-Uuid") String userUuid,
-            @NotNull @RequestHeader("Authorization") String userToken
+            @NotNull @RequestHeader("X-User-Uuid") String userUuid
     ) {
-        if (!userUuid.isBlank() && !userToken.isBlank()) {
-            return userService.getUserCurrent(userUuid, Util.tokenReplaceBearer(userToken));
+        if (!userUuid.isBlank()) {
+            return userService.getUserCurrent(userUuid);
         } else {
             throw new UserAuthenticationException("获取当前用户信息失败");
         }
+    }
+
+    /**
+     * 检查是否需要认证
+     * <hr/>
+     * 需要认证，用于获取当前用户是否需要认证；
+     *
+     * @return 认证结果
+     */
+    @NeedUserLogin
+    @GetMapping("/certification-required")
+    public ResponseEntity<BaseResponse<Void>> certificationRequired(
+            @NotNull @RequestHeader("X-User-Uuid") String userUuid
+    ) {
+        if (!userUuid.isBlank()) {
+            return userService.certificationRequired(userUuid);
+        } else {
+            throw new UserAuthenticationException("获取当前用户信息失败");
+        }
+    }
+
+    /**
+     * 发送授权
+     * <hr/>
+     * 发送授权，用于发送授权；
+     *
+     * @param request 请求
+     * @return 发送结果
+     */
+    @Transactional
+    @NeedUserLogin
+    @GetMapping("/send-authorization")
+    public ResponseEntity<BaseResponse<Void>> sendAuthorization(
+            HttpServletRequest request
+    ) {
+        return userService.sendAuthorization(request);
     }
 }

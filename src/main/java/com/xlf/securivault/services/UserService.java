@@ -37,6 +37,7 @@ package com.xlf.securivault.services;
 import com.xlf.securivault.models.dto.UserCurrentDTO;
 import com.xlf.securivault.models.vo.IndexInitialAdminVO;
 import com.xlf.securivault.utility.BaseResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -53,10 +54,9 @@ public interface UserService {
      * 获取当前用户
      *
      * @param userUuid  用户UUID
-     * @param userToken 用户Token
      * @return 用户信息
      */
-    ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid, String userToken);
+    ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid);
 
     /**
      * 初始化管理员
@@ -65,4 +65,19 @@ public interface UserService {
      * @return 初始化结果
      */
     ResponseEntity<BaseResponse<Void>> initialAdmin(IndexInitialAdminVO indexInitialAdminVO);
+
+    /**
+     * 检查授权依赖
+     *
+     * @param userUuid 用户UUID
+     * @return 用户信息
+     */
+    ResponseEntity<BaseResponse<Void>> certificationRequired(String userUuid);
+
+    /**
+     * 发送授权
+     *
+     * @return 发送授权结果
+     */
+    ResponseEntity<BaseResponse<Void>> sendAuthorization(HttpServletRequest request);
 }

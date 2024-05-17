@@ -36,20 +36,20 @@ package com.xlf.securivault.services.impl;
 
 import com.xlf.securivault.constant.SystemConfigurationVariable;
 import com.xlf.securivault.dao.InfoDAO;
-import com.xlf.securivault.dao.TokenDAO;
 import com.xlf.securivault.dao.UserDAO;
 import com.xlf.securivault.exceptions.BusinessException;
 import com.xlf.securivault.exceptions.library.UserAuthenticationException;
 import com.xlf.securivault.models.dto.UserCurrentDTO;
 import com.xlf.securivault.models.entity.InfoDO;
-import com.xlf.securivault.models.entity.TokenDO;
 import com.xlf.securivault.models.entity.UserDO;
 import com.xlf.securivault.models.vo.IndexInitialAdminVO;
+import com.xlf.securivault.services.MailService;
 import com.xlf.securivault.services.UserService;
 import com.xlf.securivault.utility.BaseResponse;
 import com.xlf.securivault.utility.ErrorCode;
 import com.xlf.securivault.utility.ResultUtil;
 import com.xlf.securivault.utility.Util;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -72,29 +72,23 @@ import java.sql.Timestamp;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
-    private final TokenDAO tokenDAO;
     private final InfoDAO infoDAO;
+    private final MailService mailService;
 
     /**
      * 获取当前用户
      *
      * @param userUuid  用户UUID
-     * @param userToken 用户Token
      * @return 用户信息
      */
     @Override
-    public ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid, String userToken) {
+    public ResponseEntity<BaseResponse<UserCurrentDTO>> getUserCurrent(String userUuid) {
         // 检查登录是否有效
-        TokenDO getToken = tokenDAO.getTokenByToken(userToken);
-        if (getToken != null) {
-            UserDO getUser = userDAO.getUserByUuid(userUuid);
-            if (getUser != null) {
-                UserCurrentDTO userCurrentDTO = new UserCurrentDTO();
-                BeanUtils.copyProperties(getUser, userCurrentDTO);
-                return ResultUtil.success("获取当前用户信息成功", userCurrentDTO);
-            } else {
-                throw new UserAuthenticationException("获取当前用户信息失败");
-            }
+        UserDO getUser = userDAO.getUserByUuid(userUuid);
+        if (getUser != null) {
+            UserCurrentDTO userCurrentDTO = new UserCurrentDTO();
+            BeanUtils.copyProperties(getUser, userCurrentDTO);
+            return ResultUtil.success("获取当前用户信息成功", userCurrentDTO);
         } else {
             throw new UserAuthenticationException("获取当前用户信息失败");
         }
@@ -132,5 +126,38 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new BusinessException("初始化管理员失败", ErrorCode.OPERATION_FAILED);
         }
+    }
+
+    @Override
+    public ResponseEntity<BaseResponse<Void>> certificationRequired(String userUuid) {
+        UserDO getUser = userDAO.getUserByUuid(userUuid);
+        if (getUser != null) {
+            if (getUser.getVerifyTime() == null) {
+                throw new BusinessException("请重新认证", ErrorCode.NEED_RE_AUTHENTICATION);
+            } else {
+                if (getUser.getVerifyTime().before(new Timestamp(System.currentTimeMillis() - 900000))) {
+                    throw new BusinessException("请重新认证", ErrorCode.NEED_RE_AUTHENTICATION);
+                }
+                return ResultUtil.success("认证有效");
+            }
+        } else {
+            throw new BusinessException("获取当前用户信息失败", ErrorCode.OPERATION_FAILED);
+        }
+    }
+
+    /**
+     * 发送授权
+     *
+     * @return 发送授权结果
+     */
+    @Override
+    public ResponseEntity<BaseResponse<Void>> sendAuthorization(HttpServletRequest request) {
+        String getUserUuid = Util.getUserUuid(request);
+        UserDO getUser = userDAO.getUserByUuid(getUserUuid);
+        if (getUser == null) {
+            throw new BusinessException("获取当前用户信息失败", ErrorCode.OPERATION_FAILED);
+        }
+        mailService.sendUserAuthorizationMail(getUser, request);
+        return ResultUtil.success("发送授权成功");
     }
 }

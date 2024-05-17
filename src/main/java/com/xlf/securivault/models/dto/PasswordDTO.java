@@ -32,44 +32,76 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.config.aspect;
+package com.xlf.securivault.models.dto;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Component;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
- * 时间统计切面
+ * 密码数据传输对象
  * <hr/>
- * 用于统计接口请求时间的切面，用于统计接口请求的时间，包括接口请求的开始时间、结束时间等；该接口主要用于对接口请求的时间进行统计；
- * 对接口进行分析，优化接口请求时间，提高接口请求的效率；
+ * 密码数据传输对象，用于返回密码的数据；
  *
- * @author xiao_lfeng
- * @version v1.0.0
  * @since v1.0.0
+ * @version v1.0.0
+ * @author xiao_lfeng
  */
-@Slf4j
-@Aspect
-@Component
-@RequiredArgsConstructor
-public class TimeStatisticsAspect {
+@Getter
+@Setter
+@NoArgsConstructor
+public class PasswordDTO {
+    /**
+     * 密码组
+     */
+    private List<Password> password;
+    /**
+     * 分页
+     */
+    private Long page;
+    /**
+     * 每页大小
+     */
+    private Long size;
 
-    @Around("execution(* com.xlf.securivault.controllers..*.*(..))")
-    public Object timeStatistics(@NotNull ProceedingJoinPoint pjp) throws Throwable {
-        long startTime = System.currentTimeMillis();
-        Object getResult = pjp.proceed();
-        long endTime = System.currentTimeMillis();
-        log.debug(
-                "[TIME] <{}>{} | 接口耗时 {}ms",
-                pjp.getSignature().getDeclaringType().getSimpleName(),
-                pjp.getSignature().getName(),
-                endTime - startTime
-        );
-        log.debug("");
-        return getResult;
+    /**
+     * 密码组
+     */
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class Password {
+        /**
+         * 密码库识别码
+         */
+        private String id;
+
+        /**
+         * 网址域名
+         */
+        private String website;
+
+        /**
+         * 对应网站用户名
+         */
+        private String username;
+
+        /**
+         * 上次查看密码时间
+         */
+        private Timestamp seeTime;
+
+        /**
+         * 创建时间
+         */
+        private Timestamp createdAt;
+
+        /**
+         * 更新时间
+         */
+        private Timestamp updatedAt;
     }
 }

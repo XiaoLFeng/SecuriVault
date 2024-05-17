@@ -34,6 +34,7 @@
 
 package com.xlf.securivault.dao;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xlf.securivault.mappers.PasswordLibraryMapper;
@@ -68,5 +69,52 @@ public class PasswordLibraryDAO
                 .eq(PasswordLibraryDO::getUsername, username)
                 .eq(PasswordLibraryDO::getUuid, user)
                 .one();
+    }
+
+    /**
+     * 根据ID获取密码
+     * <hr/>
+     * 根据ID获取密码；根据ID获取密码；
+     *
+     * @param id         ID
+     * @param getUserUuid 用户UUID
+     * @return 密码库DO
+     */
+    public PasswordLibraryDO getPasswordById(String id, String getUserUuid) {
+        return this.lambdaQuery()
+                .eq(PasswordLibraryDO::getId, id)
+                .eq(PasswordLibraryDO::getUuid, getUserUuid)
+                .one();
+    }
+
+    /**
+     * 获取所有密码
+     * <hr/>
+     * 获取所有密码；获取所有密码；
+     *
+     * @param getUserUuid 用户UUID
+     * @param search      搜索
+     * @param page        页码
+     * @param size        大小
+     * @return 密码库DO列表
+     */
+    public Page<PasswordLibraryDO> getUserAllPassword(String getUserUuid, String search, String page, String size) {
+        if (page == null || page.isEmpty()) {
+            page = "1";
+        }
+        if (size == null || size.isEmpty()) {
+            size = "20";
+        }
+        Page<PasswordLibraryDO> rowPage = new Page<>(Long.parseLong(page), Long.parseLong(size));
+        if (search == null || search.isEmpty()) {
+            return this.lambdaQuery()
+                    .eq(PasswordLibraryDO::getUuid, getUserUuid)
+                    .page(rowPage);
+        } else {
+            return this.lambdaQuery()
+                    .eq(PasswordLibraryDO::getUuid, getUserUuid)
+                    .like(PasswordLibraryDO::getWebsite, search)
+                    .page(rowPage);
+        }
     }
 }

@@ -34,7 +34,10 @@
 
 package com.xlf.securivault.services;
 
+import com.xlf.securivault.models.dto.PasswordDTO;
+import com.xlf.securivault.models.dto.PasswordSeeDTO;
 import com.xlf.securivault.models.vo.PasswordAddVO;
+import com.xlf.securivault.models.vo.PasswordEditVO;
 import com.xlf.securivault.utility.BaseResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -44,16 +47,65 @@ import org.springframework.http.ResponseEntity;
  * <hr/>
  * 权限服务，用于定义权限服务；
  *
+ * @author xiao_lfeng
  * @version v1.0.0
  * @since v1.0.0
- * @author xiao_lfeng
  */
-public interface PermissionService {
+public interface PasswordService {
     /**
-     * 添加权限
+     * 添加密码
      *
      * @param passwordAddVO 密码添加VO
+     * @param request       请求
      * @return 添加结果
      */
-    ResponseEntity<BaseResponse<Void>> addPermission(PasswordAddVO passwordAddVO, HttpServletRequest request);
+    ResponseEntity<BaseResponse<Void>> addPassword(PasswordAddVO passwordAddVO, HttpServletRequest request);
+
+    /**
+     * 编辑密码
+     *
+     * @param passwordEditVO 密码编辑VO
+     * @param passwordId     密码ID
+     * @param request        请求
+     * @return 编辑结果
+     */
+    ResponseEntity<BaseResponse<Void>> editPassword(
+            PasswordEditVO passwordEditVO,
+            String passwordId,
+            HttpServletRequest request
+    );
+
+    /**
+     * 删除密码
+     *
+     * @param passwordId 密码ID
+     * @param request    请求
+     * @return 删除结果
+     */
+    ResponseEntity<BaseResponse<Void>> deletePassword(String passwordId, HttpServletRequest request);
+
+    /**
+     * 获取密码
+     *
+     * @param passwordId 密码ID
+     * @param request    请求
+     * @return 获取结果
+     */
+    ResponseEntity<BaseResponse<PasswordSeeDTO>> getPassword(String passwordId, HttpServletRequest request);
+
+    /**
+     * 获取密码列表
+     *
+     * @param search  搜索
+     * @param page    页码
+     * @param size    大小
+     * @param request 请求
+     * @return 获取结果
+     */
+    ResponseEntity<BaseResponse<PasswordDTO>> getPasswords(
+            String search,
+            String page,
+            String size,
+            HttpServletRequest request
+    );
 }
