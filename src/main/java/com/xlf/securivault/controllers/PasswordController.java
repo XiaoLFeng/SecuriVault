@@ -38,6 +38,7 @@ import com.xlf.securivault.annotations.NeedAuthentication;
 import com.xlf.securivault.annotations.NeedUserLogin;
 import com.xlf.securivault.exceptions.BusinessException;
 import com.xlf.securivault.models.dto.PasswordDTO;
+import com.xlf.securivault.models.dto.PasswordGeneralDTO;
 import com.xlf.securivault.models.dto.PasswordSeeDTO;
 import com.xlf.securivault.models.vo.PasswordAddVO;
 import com.xlf.securivault.models.vo.PasswordEditVO;
@@ -163,5 +164,18 @@ public class PasswordController {
             throw new BusinessException("每页数量格式错误", ErrorCode.REQUEST_PARAMETERS_ERROR);
         }
         return passwordService.getPasswords(search, page, size, request);
+    }
+
+    /**
+     * 获取密码的通用信息
+     *
+     * @return 获取结果
+     */
+    @NeedUserLogin
+    @GetMapping("/general")
+    public ResponseEntity<BaseResponse<PasswordGeneralDTO>> getPasswordGeneral(
+            HttpServletRequest request
+    ) {
+        return passwordService.getPasswordGeneral(request);
     }
 }

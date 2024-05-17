@@ -41,6 +41,9 @@ import com.xlf.securivault.mappers.PasswordLibraryMapper;
 import com.xlf.securivault.models.entity.PasswordLibraryDO;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 /**
  * 密码库DAO
  * <hr/>
@@ -116,5 +119,71 @@ public class PasswordLibraryDAO
                     .like(PasswordLibraryDO::getWebsite, search)
                     .page(rowPage);
         }
+    }
+
+    /**
+     * 获取密码总数
+     * <hr/>
+     * 获取密码总数；获取密码总数；
+     *
+     * @param getUserUuid 用户UUID
+     * @return 密码总数
+     */
+    public Long getUserPasswordTotal(String getUserUuid) {
+        return this.lambdaQuery()
+                .eq(PasswordLibraryDO::getUuid, getUserUuid)
+                .isNull(PasswordLibraryDO::getDeletedAt)
+                .count();
+    }
+
+    /**
+     * 获取最近添加的密码
+     * <hr/>
+     * 获取最近添加的密码；获取最近添加的密码；
+     *
+     * @param getUserUuid 用户UUID
+     * @return 最近添加的密码
+     */
+    public Long getUserPasswordRecentlyAdd(String getUserUuid) {
+        Date lastSevenDays = new Date(System.currentTimeMillis() - 604800000);
+        return this.lambdaQuery()
+                .eq(PasswordLibraryDO::getUuid, getUserUuid)
+                .isNull(PasswordLibraryDO::getDeletedAt)
+                .gt(PasswordLibraryDO::getCreatedAt, new Timestamp(lastSevenDays.getTime()))
+                .count();
+    }
+
+    /**
+     * 获取最近查看的密码
+     * <hr/>
+     * 获取最近查看的密码；获取最近查看的密码；
+     *
+     * @param getUserUuid 用户UUID
+     * @return 最近查看的密码
+     */
+    public Long getUserPasswordRecentlyGet(String getUserUuid) {
+        Date lastSevenDays = new Date(System.currentTimeMillis() - 604800000);
+        return this.lambdaQuery()
+                .eq(PasswordLibraryDO::getUuid, getUserUuid)
+                .isNull(PasswordLibraryDO::getDeletedAt)
+                .gt(PasswordLibraryDO::getSeeTime, new Timestamp(lastSevenDays.getTime()))
+                .count();
+    }
+
+    /**
+     * 获取最近删除的密码
+     * <hr/>
+     * 获取最近删除的密码；获取最近删除的密码；
+     *
+     * @param getUserUuid 用户UUID
+     * @return 最近删除的密码
+     */
+    public Long getUserPasswordRecentlyRemove(String getUserUuid) {
+        Date lastSevenDays = new Date(System.currentTimeMillis() - 604800000);
+        return this.lambdaQuery()
+                .eq(PasswordLibraryDO::getUuid, getUserUuid)
+                .isNotNull(PasswordLibraryDO::getDeletedAt)
+                .gt(PasswordLibraryDO::getDeletedAt, new Timestamp(lastSevenDays.getTime()))
+                .count();
     }
 }

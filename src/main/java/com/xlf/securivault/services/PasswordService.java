@@ -35,6 +35,7 @@
 package com.xlf.securivault.services;
 
 import com.xlf.securivault.models.dto.PasswordDTO;
+import com.xlf.securivault.models.dto.PasswordGeneralDTO;
 import com.xlf.securivault.models.dto.PasswordSeeDTO;
 import com.xlf.securivault.models.vo.PasswordAddVO;
 import com.xlf.securivault.models.vo.PasswordEditVO;
@@ -108,4 +109,12 @@ public interface PasswordService {
             String size,
             HttpServletRequest request
     );
+
+    /**
+     * 获取密码的通用信息
+     *
+     * @param request 请求
+     * @return 获取结果
+     */
+    ResponseEntity<BaseResponse<PasswordGeneralDTO>> getPasswordGeneral(HttpServletRequest request);
 }

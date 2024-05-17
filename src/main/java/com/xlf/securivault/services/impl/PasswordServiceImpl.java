@@ -40,6 +40,7 @@ import com.google.gson.Gson;
 import com.xlf.securivault.dao.PasswordLibraryDAO;
 import com.xlf.securivault.exceptions.BusinessException;
 import com.xlf.securivault.models.dto.PasswordDTO;
+import com.xlf.securivault.models.dto.PasswordGeneralDTO;
 import com.xlf.securivault.models.dto.PasswordSeeDTO;
 import com.xlf.securivault.models.entity.PasswordLibraryDO;
 import com.xlf.securivault.models.vo.PasswordAddVO;
@@ -254,6 +255,34 @@ public class PasswordServiceImpl implements PasswordService {
             passwords.setSize(0L);
             passwords.setPassword(new ArrayList<>());
             return ResultUtil.success("没有密码", passwords);
+        }
+    }
+
+    /**
+     * 获取密码的通用信息
+     *
+     * @param request 请求
+     * @return 获取结果
+     */
+    @Override
+    public ResponseEntity<BaseResponse<PasswordGeneralDTO>> getPasswordGeneral(HttpServletRequest request) {
+        String getUserUuid = Util.getUserUuid(request);
+        Long getCount = passwordLibraryDAO.getUserPasswordTotal(getUserUuid);
+        // 获取密码的通用信息
+        if (getCount > 0) {
+            PasswordGeneralDTO generalPassword = new PasswordGeneralDTO();
+            generalPassword.setTotalPassword(getCount);
+            generalPassword.setRecentlyAdd(passwordLibraryDAO.getUserPasswordRecentlyAdd(getUserUuid));
+            generalPassword.setRecentlyGet(passwordLibraryDAO.getUserPasswordRecentlyGet(getUserUuid));
+            generalPassword.setRecentlyRemove(passwordLibraryDAO.getUserPasswordRecentlyRemove(getUserUuid));
+            return ResultUtil.success("密码通用信息获取成功", generalPassword);
+        } else {
+            PasswordGeneralDTO generalPassword = new PasswordGeneralDTO();
+            generalPassword.setTotalPassword(0L);
+            generalPassword.setRecentlyAdd(0L);
+            generalPassword.setRecentlyGet(0L);
+            generalPassword.setRecentlyRemove(0L);
+            return ResultUtil.success("没有密码", generalPassword);
         }
     }
 }
