@@ -62,10 +62,11 @@ public class PasswordLibraryDAO
      * @param username 用户名
      * @return 密码库DO
      */
-    public PasswordLibraryDO checkPasswordExist(String website, String username) {
+    public PasswordLibraryDO checkPasswordExist(String website, String username, String user) {
         return this.lambdaQuery()
                 .eq(PasswordLibraryDO::getWebsite, website)
                 .eq(PasswordLibraryDO::getUsername, username)
+                .eq(PasswordLibraryDO::getUuid, user)
                 .one();
     }
 }

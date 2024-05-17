@@ -36,6 +36,7 @@ package com.xlf.securivault.services;
 
 import com.xlf.securivault.models.vo.PasswordAddVO;
 import com.xlf.securivault.utility.BaseResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -54,5 +55,5 @@ public interface PermissionService {
      * @param passwordAddVO 密码添加VO
      * @return 添加结果
      */
-    ResponseEntity<BaseResponse<Void>> addPermission(PasswordAddVO passwordAddVO);
+    ResponseEntity<BaseResponse<Void>> addPermission(PasswordAddVO passwordAddVO, HttpServletRequest request);
 }

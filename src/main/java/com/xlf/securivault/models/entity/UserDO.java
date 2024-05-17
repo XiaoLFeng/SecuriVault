@@ -117,6 +117,11 @@ public class UserDO {
     private Boolean banned;
 
     /**
+     * 校验时间
+     */
+    private Timestamp verifyTime;
+
+    /**
      * 创建时间
      */
     private Timestamp createdAt;

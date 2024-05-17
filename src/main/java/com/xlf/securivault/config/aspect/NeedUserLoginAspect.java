@@ -32,52 +32,51 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.models.vo;
+package com.xlf.securivault.config.aspect;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.xlf.securivault.dao.TokenDAO;
+import com.xlf.securivault.exceptions.library.UserAuthenticationException;
+import com.xlf.securivault.models.entity.TokenDO;
+import com.xlf.securivault.utility.Util;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
- * 密码添加视图对象
+ * 需要用户登录切面
  * <hr/>
- * 密码添加视图对象，用于接收密码添加请求的参数；
+ * 用于处理需要用户登录的切面；
  *
- * @author xiao_lfeng
- * @version v1.0.0
  * @since v1.0.0
+ * @version v1.0.0
+ * @author xiao_lfeng
  */
-@Getter
-@Setter
-@NoArgsConstructor
-public class PasswordAddVO {
-    /**
-     * 网站
-     */
-    @Pattern(regexp = "[a-zA-z]+://\\S*", message = "网站格式错误")
-    @NotBlank(message = "网站不能为空")
-    private String website;
+@Slf4j
+@Aspect
+@Component
+@RequiredArgsConstructor
+public class NeedUserLoginAspect {
+    private final TokenDAO tokenDAO;
 
-    /**
-     * 用户名
-     */
-    @NotBlank(message = "用户名不能为空")
-    private String username;
+    @Before("@annotation(com.xlf.securivault.annotations.NeedUserLogin)")
+    public void checkUserLogin() {
+        // 获取 httpServletRequest
+        HttpServletRequest request = (HttpServletRequest) RequestContextHolder.getRequestAttributes();
+        assert request != null;
+        // 获取用户信息
+        String userUuid = request.getHeader("X-User-Uuid");
+        String getAuthorization = Util.tokenReplaceBearer(request);
 
-    /**
-     * 密码
-     */
-    private String password;
-
-    /**
-     * 邮箱
-     */
-    private String other;
-
-    /**
-     * 强制
-     */
-    private Boolean force;
+        TokenDO getUserToken = tokenDAO.getTokenByToken(getAuthorization);
+        if (getUserToken == null) {
+            throw new UserAuthenticationException("用户未登录");
+        }
+        if (!getUserToken.getUuid().equals(userUuid)) {
+            throw new UserAuthenticationException("用户未登录");
+        }
+    }
 }

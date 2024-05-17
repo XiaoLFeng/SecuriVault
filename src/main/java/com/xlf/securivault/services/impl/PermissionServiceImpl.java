@@ -44,6 +44,7 @@ import com.xlf.securivault.utility.BaseResponse;
 import com.xlf.securivault.utility.ErrorCode;
 import com.xlf.securivault.utility.ResultUtil;
 import com.xlf.securivault.utility.Util;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
@@ -73,9 +74,13 @@ public class PermissionServiceImpl implements PermissionService {
      * @return 添加结果
      */
     @Override
-    public ResponseEntity<BaseResponse<Void>> addPermission(@NotNull PasswordAddVO passwordAddVO) {
+    public ResponseEntity<BaseResponse<Void>> addPermission(
+            @NotNull PasswordAddVO passwordAddVO,
+            HttpServletRequest request
+    ) {
+        String getUserUuid = Util.getUserUuid(request);
         PasswordLibraryDO getPassword = passwordLibraryDAO
-                .checkPasswordExist(passwordAddVO.getWebsite(), passwordAddVO.getUsername());
+                .checkPasswordExist(passwordAddVO.getWebsite(), passwordAddVO.getUsername(), getUserUuid);
         if (getPassword != null) {
             if (!passwordAddVO.getForce()) {
                 throw new BusinessException("密码已存在，若强制添加", ErrorCode.OPERATION_FAILED);
@@ -100,6 +105,8 @@ public class PermissionServiceImpl implements PermissionService {
             }
         } else {
             PasswordLibraryDO setPassword = new PasswordLibraryDO();
+            setPassword.setId(Util.generateUuid().toString());
+            setPassword.setUuid(getUserUuid);
             setPassword.setWebsite(passwordAddVO.getWebsite());
             setPassword.setUsername(passwordAddVO.getUsername());
             setPassword.setPassword(Util.passwordLibraryEncode(passwordAddVO.getPassword()));

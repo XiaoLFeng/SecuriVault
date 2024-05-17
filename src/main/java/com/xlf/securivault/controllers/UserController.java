@@ -34,6 +34,7 @@
 
 package com.xlf.securivault.controllers;
 
+import com.xlf.securivault.annotations.NeedUserLogin;
 import com.xlf.securivault.exceptions.library.UserAuthenticationException;
 import com.xlf.securivault.models.dto.UserCurrentDTO;
 import com.xlf.securivault.services.UserService;
@@ -71,6 +72,7 @@ public class UserController {
      *
      * @return 当前用户信息
      */
+    @NeedUserLogin
     @GetMapping("/current")
     public ResponseEntity<BaseResponse<UserCurrentDTO>> userCurrent(
             @NotNull @RequestHeader("X-User-Uuid") String userUuid,

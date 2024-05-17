@@ -34,6 +34,7 @@
 
 package com.xlf.securivault.utility;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -125,6 +126,23 @@ public class Util {
     }
 
     /**
+     * 替换 Token 中的 Bearer
+     * <hr/>
+     * 用于替换 Token 中的 Bearer；用于替换 Token 中的 Bearer; 用于获取 Token 本身
+     *
+     * @param request 请求
+     * @return 替换后的 Token
+     */
+    public static @NotNull String tokenReplaceBearer(@NotNull HttpServletRequest request) {
+        String getAuthorization = request.getHeader("Authorization");
+        if (getAuthorization != null && !getAuthorization.isBlank()) {
+            return getAuthorization.replace("Bearer ", "");
+        } else {
+            return "";
+        }
+    }
+
+    /**
      * 加密密码库
      * <hr/>
      * 用于加密密码库；用于加密密码库；加密方法为 Base64 + Base64
@@ -148,5 +166,17 @@ public class Util {
     public static @NotNull String passwordLibraryDecode(@NotNull String password) {
         String base64Password = new String(Base64.getDecoder().decode(password));
         return new String(Base64.getDecoder().decode(base64Password));
+    }
+
+    /**
+     * 获取用户 UUID
+     * <hr/>
+     * 用于获取用户 UUID；用于获取用户 UUID；用于获取用户 UUID
+     *
+     * @param request 请求
+     * @return 用户 UUID
+     */
+    public static String getUserUuid(HttpServletRequest request) {
+        return request.getHeader("userUuid");
     }
 }

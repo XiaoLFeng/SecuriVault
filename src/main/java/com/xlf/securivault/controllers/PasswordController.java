@@ -34,9 +34,11 @@
 
 package com.xlf.securivault.controllers;
 
+import com.xlf.securivault.annotations.NeedUserLogin;
 import com.xlf.securivault.models.vo.PasswordAddVO;
 import com.xlf.securivault.services.PermissionService;
 import com.xlf.securivault.utility.BaseResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -68,10 +70,12 @@ public class PasswordController {
      * @param passwordAddVO 密码添加VO
      * @return 添加结果
      */
+    @NeedUserLogin
     @PostMapping("/")
     public ResponseEntity<BaseResponse<Void>> addPassword(
-            @RequestBody @Validated PasswordAddVO passwordAddVO
+            @RequestBody @Validated PasswordAddVO passwordAddVO,
+            HttpServletRequest request
     ) {
-        return permissionService.addPermission(passwordAddVO);
+        return permissionService.addPermission(passwordAddVO, request);
     }
 }

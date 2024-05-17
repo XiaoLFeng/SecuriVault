@@ -41,6 +41,7 @@ import com.xlf.securivault.utility.ResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mail.MailSendException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -300,5 +301,21 @@ public class PublicException {
     ) {
         log.error("[EXCEPTION] 用户认证异常 | {}", e.getMessage());
         return ResultUtil.error(ErrorCode.USER_NOT_LOGIN, "Token 授权不存在或已过期", null);
+    }
+
+    /**
+     * 请求体不可读异常处理
+     * <hr/>
+     * 用于处理请求体不可读异常, 当请求体不可读异常发生时，将会自动捕获并处理，不会影响系统的正常运行
+     *
+     * @param e 请求体不可读异常 HttpMessageNotReadableException
+     * @return 返回异常信息
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<BaseResponse<HttpMessageNotReadableException>> handleHttpMessageNotReadableException(
+            @NotNull HttpMessageNotReadableException e
+    ) {
+        log.error("[EXCEPTION] 请求体不能为空 | {}", e.getMessage());
+        return ResultUtil.error(ErrorCode.REQUEST_BODY_PARAMETERS_ERROR, "请求体不能为空", null);
     }
 }
