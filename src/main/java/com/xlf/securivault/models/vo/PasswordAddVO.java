@@ -79,5 +79,5 @@ public class PasswordAddVO {
     /**
      * 强制
      */
-    private Boolean force;
+    private boolean force;
 }

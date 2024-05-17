@@ -176,7 +176,7 @@ public class Util {
      * @param request 请求
      * @return 用户 UUID
      */
-    public static String getUserUuid(HttpServletRequest request) {
-        return request.getHeader("userUuid");
+    public static String getUserUuid(@NotNull HttpServletRequest request) {
+        return request.getHeader("X-User-Uuid");
     }
 }

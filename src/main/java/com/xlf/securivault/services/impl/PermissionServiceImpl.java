@@ -82,8 +82,8 @@ public class PermissionServiceImpl implements PermissionService {
         PasswordLibraryDO getPassword = passwordLibraryDAO
                 .checkPasswordExist(passwordAddVO.getWebsite(), passwordAddVO.getUsername(), getUserUuid);
         if (getPassword != null) {
-            if (!passwordAddVO.getForce()) {
-                throw new BusinessException("密码已存在，若强制添加", ErrorCode.OPERATION_FAILED);
+            if (!passwordAddVO.isForce()) {
+                throw new BusinessException("密码已存在，若任需修改密码请强制修改", ErrorCode.OPERATION_FAILED);
             }
         }
         // 添加密码
@@ -93,13 +93,13 @@ public class PermissionServiceImpl implements PermissionService {
             getPassword.setPassword(Util.passwordLibraryEncode(passwordAddVO.getPassword()));
             getPassword.setOther(passwordAddVO.getOther());
             getPassword.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-            passwordLibraryDAO.update(
+            boolean status = passwordLibraryDAO.update(
                     getPassword,
                     new QueryWrapper<PasswordLibraryDO>()
                             .eq("id", getPassword.getId())
             );
-            if (passwordLibraryDAO.save(getPassword)) {
-                return ResultUtil.success("添加密码成功");
+            if (status) {
+                return ResultUtil.success("密码强制修改成功");
             } else {
                 throw new BusinessException("添加密码失败", ErrorCode.OPERATION_FAILED);
             }

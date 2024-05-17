@@ -44,7 +44,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * 需要用户登录切面
@@ -60,15 +59,13 @@ import org.springframework.web.context.request.RequestContextHolder;
 @Component
 @RequiredArgsConstructor
 public class NeedUserLoginAspect {
+    private final HttpServletRequest request;
     private final TokenDAO tokenDAO;
 
     @Before("@annotation(com.xlf.securivault.annotations.NeedUserLogin)")
     public void checkUserLogin() {
-        // 获取 httpServletRequest
-        HttpServletRequest request = (HttpServletRequest) RequestContextHolder.getRequestAttributes();
-        assert request != null;
         // 获取用户信息
-        String userUuid = request.getHeader("X-User-Uuid");
+        String userUuid = Util.getUserUuid(request);
         String getAuthorization = Util.tokenReplaceBearer(request);
 
         TokenDO getUserToken = tokenDAO.getTokenByToken(getAuthorization);
