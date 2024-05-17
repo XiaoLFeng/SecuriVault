@@ -32,76 +32,46 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.models.entity;
+package com.xlf.securivault.controllers;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
-import java.sql.Timestamp;
+import com.xlf.securivault.models.vo.PasswordAddVO;
+import com.xlf.securivault.services.PermissionService;
+import com.xlf.securivault.utility.BaseResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 密码库表
+ * 密码控制器
  * <hr/>
- * 用于定义密码库表，用于定义密码库的基本信息；
+ * 密码控制器，用于处理密码相关的请求；
  *
+ * @since v1.0.0
+ * @version v1.0.0
  * @author xiao_lfeng
- * @version 1.0.0
- * @since 1.0.0
  */
-@Data
-@Accessors(chain = true)
-@TableName("xf_password_library")
-public class PasswordLibraryDO {
-    /**
-     * 密码库识别码
-     */
-    @TableId(value = "id")
-    private String id;
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/password")
+public class PasswordController {
+    private final PermissionService permissionService;
 
     /**
-     * 用户识别码
+     * 添加密码
+     *
+     * @param passwordAddVO 密码添加VO
+     * @return 添加结果
      */
-    private String uuid;
-
-    /**
-     * 网址域名
-     */
-    private String website;
-
-    /**
-     * 对应网站用户名
-     */
-    private String username;
-
-    /**
-     * 对应网站密码
-     */
-    private String password;
-
-    /**
-     * 其他键值对的匹配
-     */
-    private String other;
-
-    /**
-     * 查看密码时间
-     */
-    private Timestamp seeTime;
-
-    /**
-     * 创建时间
-     */
-    private Timestamp createdAt;
-
-    /**
-     * 更新时间
-     */
-    private Timestamp updatedAt;
-
-    /**
-     * 删除时间
-     */
-    private Timestamp deletedAt;
+    @PostMapping("/")
+    public ResponseEntity<BaseResponse<Void>> addPassword(
+            @RequestBody @Validated PasswordAddVO passwordAddVO
+    ) {
+        return permissionService.addPermission(passwordAddVO);
+    }
 }

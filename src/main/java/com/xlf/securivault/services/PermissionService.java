@@ -32,76 +32,27 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.models.entity;
+package com.xlf.securivault.services;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
-import java.sql.Timestamp;
+import com.xlf.securivault.models.vo.PasswordAddVO;
+import com.xlf.securivault.utility.BaseResponse;
+import org.springframework.http.ResponseEntity;
 
 /**
- * 密码库表
+ * 权限服务
  * <hr/>
- * 用于定义密码库表，用于定义密码库的基本信息；
+ * 权限服务，用于定义权限服务；
  *
+ * @version v1.0.0
+ * @since v1.0.0
  * @author xiao_lfeng
- * @version 1.0.0
- * @since 1.0.0
  */
-@Data
-@Accessors(chain = true)
-@TableName("xf_password_library")
-public class PasswordLibraryDO {
+public interface PermissionService {
     /**
-     * 密码库识别码
+     * 添加权限
+     *
+     * @param passwordAddVO 密码添加VO
+     * @return 添加结果
      */
-    @TableId(value = "id")
-    private String id;
-
-    /**
-     * 用户识别码
-     */
-    private String uuid;
-
-    /**
-     * 网址域名
-     */
-    private String website;
-
-    /**
-     * 对应网站用户名
-     */
-    private String username;
-
-    /**
-     * 对应网站密码
-     */
-    private String password;
-
-    /**
-     * 其他键值对的匹配
-     */
-    private String other;
-
-    /**
-     * 查看密码时间
-     */
-    private Timestamp seeTime;
-
-    /**
-     * 创建时间
-     */
-    private Timestamp createdAt;
-
-    /**
-     * 更新时间
-     */
-    private Timestamp updatedAt;
-
-    /**
-     * 删除时间
-     */
-    private Timestamp deletedAt;
+    ResponseEntity<BaseResponse<Void>> addPermission(PasswordAddVO passwordAddVO);
 }

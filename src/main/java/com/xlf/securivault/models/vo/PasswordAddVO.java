@@ -32,76 +32,51 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.models.entity;
+package com.xlf.securivault.models.vo;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
-import java.sql.Timestamp;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
- * 密码库表
+ * 密码添加视图对象
  * <hr/>
- * 用于定义密码库表，用于定义密码库的基本信息；
+ * 密码添加视图对象，用于接收密码添加请求的参数；
  *
  * @author xiao_lfeng
- * @version 1.0.0
- * @since 1.0.0
+ * @version v1.0.0
+ * @since v1.0.0
  */
-@Data
-@Accessors(chain = true)
-@TableName("xf_password_library")
-public class PasswordLibraryDO {
+@Getter
+@Setter
+@NoArgsConstructor
+public class PasswordAddVO {
     /**
-     * 密码库识别码
+     * 网站
      */
-    @TableId(value = "id")
-    private String id;
-
-    /**
-     * 用户识别码
-     */
-    private String uuid;
-
-    /**
-     * 网址域名
-     */
+    @Pattern(regexp = "[a-zA-z]+://\\S*", message = "网站格式错误")
     private String website;
 
     /**
-     * 对应网站用户名
+     * 用户名
      */
+    @NotBlank
     private String username;
 
     /**
-     * 对应网站密码
+     * 密码
      */
     private String password;
 
     /**
-     * 其他键值对的匹配
+     * 邮箱
      */
     private String other;
 
     /**
-     * 查看密码时间
+     * 强制
      */
-    private Timestamp seeTime;
-
-    /**
-     * 创建时间
-     */
-    private Timestamp createdAt;
-
-    /**
-     * 更新时间
-     */
-    private Timestamp updatedAt;
-
-    /**
-     * 删除时间
-     */
-    private Timestamp deletedAt;
+    private Boolean force;
 }

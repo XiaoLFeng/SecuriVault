@@ -32,76 +32,40 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.models.entity;
+package com.xlf.securivault.dao;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
-import java.sql.Timestamp;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xlf.securivault.mappers.PasswordLibraryMapper;
+import com.xlf.securivault.models.entity.PasswordLibraryDO;
+import org.springframework.stereotype.Repository;
 
 /**
- * 密码库表
+ * 密码库DAO
  * <hr/>
- * 用于定义密码库表，用于定义密码库的基本信息；
+ * 密码库DAO，用于定义密码库DAO；
  *
+ * @version v1.0.0
+ * @since v1.0.0
  * @author xiao_lfeng
- * @version 1.0.0
- * @since 1.0.0
  */
-@Data
-@Accessors(chain = true)
-@TableName("xf_password_library")
-public class PasswordLibraryDO {
+@Repository
+public class PasswordLibraryDAO
+        extends ServiceImpl<PasswordLibraryMapper, PasswordLibraryDO>
+        implements IService<PasswordLibraryDO> {
     /**
-     * 密码库识别码
+     * 检查密码是否存在
+     * <hr/>
+     * 检查密码是否存在；根据网站页面以及用户名检查密码是否存在；
+     *
+     * @param website  网站
+     * @param username 用户名
+     * @return 密码库DO
      */
-    @TableId(value = "id")
-    private String id;
-
-    /**
-     * 用户识别码
-     */
-    private String uuid;
-
-    /**
-     * 网址域名
-     */
-    private String website;
-
-    /**
-     * 对应网站用户名
-     */
-    private String username;
-
-    /**
-     * 对应网站密码
-     */
-    private String password;
-
-    /**
-     * 其他键值对的匹配
-     */
-    private String other;
-
-    /**
-     * 查看密码时间
-     */
-    private Timestamp seeTime;
-
-    /**
-     * 创建时间
-     */
-    private Timestamp createdAt;
-
-    /**
-     * 更新时间
-     */
-    private Timestamp updatedAt;
-
-    /**
-     * 删除时间
-     */
-    private Timestamp deletedAt;
+    public PasswordLibraryDO checkPasswordExist(String website, String username) {
+        return this.lambdaQuery()
+                .eq(PasswordLibraryDO::getWebsite, website)
+                .eq(PasswordLibraryDO::getUsername, username)
+                .one();
+    }
 }
