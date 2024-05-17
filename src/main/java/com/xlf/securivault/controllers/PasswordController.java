@@ -75,7 +75,7 @@ public class PasswordController {
      * @return 添加结果
      */
     @NeedUserLogin
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<BaseResponse<Void>> addPassword(
             @RequestBody @Validated PasswordAddVO passwordAddVO,
             HttpServletRequest request

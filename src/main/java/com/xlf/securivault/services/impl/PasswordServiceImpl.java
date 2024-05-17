@@ -94,7 +94,7 @@ public class PasswordServiceImpl implements PasswordService {
                 .checkPasswordExist(passwordAddVO.getWebsite(), passwordAddVO.getUsername(), getUserUuid);
         if (getPassword != null) {
             if (!passwordAddVO.isForce()) {
-                throw new BusinessException("密码已存在，若任需修改密码请强制修改", ErrorCode.OPERATION_FAILED);
+                throw new BusinessException("密码已存在，请直接修改信息", ErrorCode.OPERATION_FAILED);
             }
         }
         // 添加密码
