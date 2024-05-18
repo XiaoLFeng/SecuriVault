@@ -33,3 +33,4 @@ build/
 .vscode/
 .logs/
 application-dev.yml
+.DS_Store
