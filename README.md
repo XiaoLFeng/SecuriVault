@@ -2,7 +2,7 @@
 
 > 守护秘匣 - 基于 Springboot 的跨端密码管理平台
  
-后端平台：https://github.com/XiaoLFeng/SecuriVault
+- 后端平台：https://github.com/XiaoLFeng/SecuriVault
 - 前端平台：https://github.com/XiaoLFeng/securi-vault-web
 
 ## 项目介绍
