@@ -114,7 +114,7 @@ public class PasswordServiceImpl implements PasswordService {
                                 .eq("id", getPassword.getId())
                 );
                 if (status) {
-                    logsDAO.addLog(getUserUuid, getPassword, " Web", "重新添加密码");
+                    logsDAO.addPasswordLog(getUserUuid, getPassword, " Web", "重新添加密码");
                     return ResultUtil.success("添加密码成功");
                 } else {
                     throw new BusinessException("添加密码失败", ErrorCode.OPERATION_FAILED);
@@ -127,7 +127,7 @@ public class PasswordServiceImpl implements PasswordService {
                                 .eq("id", getPassword.getId())
                 );
                 if (status) {
-                    logsDAO.addLog(getUserUuid, getPassword, " Web", "强制添加密码");
+                    logsDAO.addPasswordLog(getUserUuid, getPassword, " Web", "强制添加密码");
                     return ResultUtil.success("密码强制修改成功");
                 } else {
                     throw new BusinessException("添加密码失败", ErrorCode.OPERATION_FAILED);
@@ -142,7 +142,7 @@ public class PasswordServiceImpl implements PasswordService {
             setPassword.setPassword(Util.passwordLibraryEncode(passwordAddVO.getPassword()));
             setPassword.setOther(passwordAddVO.getOther());
             if (passwordLibraryDAO.save(setPassword)) {
-                logsDAO.addLog(getUserUuid, setPassword, " Web", "添加密码");
+                logsDAO.addPasswordLog(getUserUuid, setPassword, " Web", "添加密码");
                 return ResultUtil.success("添加密码成功");
             } else {
                 throw new BusinessException("添加密码失败", ErrorCode.OPERATION_FAILED);
@@ -181,7 +181,7 @@ public class PasswordServiceImpl implements PasswordService {
                         .eq("id", getPassword.getId())
         );
         if (status) {
-            logsDAO.addLog(getUserUuid, getPassword, " Web", "编辑密码");
+            logsDAO.addPasswordLog(getUserUuid, getPassword, " Web", "编辑密码");
             return ResultUtil.success("编辑密码成功");
         } else {
             throw new BusinessException("编辑密码失败", ErrorCode.OPERATION_FAILED);
@@ -209,7 +209,7 @@ public class PasswordServiceImpl implements PasswordService {
                 .set("deleted_at", new Timestamp(System.currentTimeMillis()))
         );
         if (status) {
-            logsDAO.addLog(getUserUuid, getPassword, " Web", "删除密码");
+            logsDAO.addPasswordLog(getUserUuid, getPassword, " Web", "删除密码");
             return ResultUtil.success("删除密码成功");
         } else {
             throw new BusinessException("删除密码失败", ErrorCode.OPERATION_FAILED);
@@ -237,7 +237,7 @@ public class PasswordServiceImpl implements PasswordService {
         if (seePassword.getOther() != null) {
             seePassword.setOther(gson.fromJson(getPassword.getOther(), HashMap.class));
         }
-        logsDAO.addLog(getUserUuid, getPassword, " Web", "查看密码");
+        logsDAO.addPasswordLog(getUserUuid, getPassword, " Web", "查看密码");
         return ResultUtil.success("密码获取成功", seePassword);
     }
 
@@ -266,6 +266,7 @@ public class PasswordServiceImpl implements PasswordService {
             for (PasswordLibraryDO getPassword : getPasswordList) {
                 PasswordDTO.Password password = new PasswordDTO.Password();
                 BeanUtils.copyProperties(getPassword, password);
+                password.setUsername(Util.maskKey(getPassword.getUsername()));
                 passwordList.add(password);
             }
             passwords.setPage(getPasswords.getCurrent());

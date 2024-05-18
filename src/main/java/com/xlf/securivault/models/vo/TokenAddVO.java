@@ -32,80 +32,57 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.models.dto;
+package com.xlf.securivault.models.vo;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-import java.util.List;
-
 /**
- * 密码数据传输对象
+ * 令牌添加视图对象
  * <hr/>
- * 密码数据传输对象，用于返回密码的数据；
+ * 令牌添加视图对象，用于接收令牌添加请求的参数；
  *
- * @since v1.0.0
- * @version v1.0.0
  * @author xiao_lfeng
+ * @version v1.0.0
+ * @since v1.0.0
  */
 @Getter
 @Setter
 @NoArgsConstructor
-public class PasswordDTO {
+public class TokenAddVO {
     /**
-     * 密码组
+     * 网站
      */
-    private List<Password> password;
-    /**
-     * 分页
-     */
-    private Long page;
-    /**
-     * 每页大小
-     */
-    private Long size;
-    /**
-     * 总数
-     */
-    private Long total;
+    @NotBlank(message = "站点信息不能为空")
+    private String site;
 
     /**
-     * 密码组
+     * 描述
      */
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class Password {
-        /**
-         * 密码库识别码
-         */
-        private String id;
+    private String description;
 
-        /**
-         * 网址域名
-         */
-        private String website;
+    /**
+     * 用户名
+     */
+    private String accessKey;
 
-        /**
-         * 对应网站用户名
-         */
-        private String username;
+    /**
+     * 密码
+     */
 
-        /**
-         * 上次查看密码时间
-         */
-        private Timestamp seeTime;
+    @NotBlank(message = "密码密钥不能为空")
+    private String secretKey;
 
-        /**
-         * 创建时间
-         */
-        private Timestamp createdAt;
+    /**
+     * 其他信息
+     */
 
-        /**
-         * 更新时间
-         */
-        private Timestamp updatedAt;
-    }
+    private String other;
+
+    /**
+     * 强制
+     */
+    private boolean force;
 }

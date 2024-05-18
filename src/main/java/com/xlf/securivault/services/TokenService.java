@@ -32,80 +32,66 @@
  * ******************************************************************************
  */
 
-package com.xlf.securivault.models.dto;
+package com.xlf.securivault.services;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.sql.Timestamp;
-import java.util.List;
+import com.xlf.securivault.models.dto.TokenDTO;
+import com.xlf.securivault.models.dto.TokenGeneralDTO;
+import com.xlf.securivault.models.dto.TokenSeeDTO;
+import com.xlf.securivault.models.vo.TokenAddVO;
+import com.xlf.securivault.utility.BaseResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 
 /**
- * 密码数据传输对象
+ * 令牌服务
  * <hr/>
- * 密码数据传输对象，用于返回密码的数据；
+ * 令牌服务，用于定义令牌服务；
  *
- * @since v1.0.0
  * @version v1.0.0
+ * @since v1.0.0
  * @author xiao_lfeng
  */
-@Getter
-@Setter
-@NoArgsConstructor
-public class PasswordDTO {
+public interface TokenService {
     /**
-     * 密码组
+     * 添加令牌
+     *
+     * @param tokenAddVO 令牌添加VO
+     * @param request 请求
+     * @return 添加令牌结果
      */
-    private List<Password> password;
-    /**
-     * 分页
-     */
-    private Long page;
-    /**
-     * 每页大小
-     */
-    private Long size;
-    /**
-     * 总数
-     */
-    private Long total;
+    ResponseEntity<BaseResponse<Void>> addToken(TokenAddVO tokenAddVO, HttpServletRequest request);
 
     /**
-     * 密码组
+     * 删除令牌
+     *
+     * @param tokenId 令牌ID
+     * @return 删除令牌结果
      */
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class Password {
-        /**
-         * 密码库识别码
-         */
-        private String id;
+    ResponseEntity<BaseResponse<Void>> deleteToken(String tokenId, HttpServletRequest request);
 
-        /**
-         * 网址域名
-         */
-        private String website;
+    /**
+     * 获取令牌
+     *
+     * @param tokenId 令牌ID
+     * @return 令牌
+     */
+    ResponseEntity<BaseResponse<TokenSeeDTO>> getToken(String tokenId, HttpServletRequest request);
 
-        /**
-         * 对应网站用户名
-         */
-        private String username;
+    /**
+     * 获取令牌
+     *
+     * @param search 搜索
+     * @param page 页码
+     * @param limit 大小
+     * @return 令牌
+     */
+    ResponseEntity<BaseResponse<TokenDTO>> getTokens(String search, Long page, Long limit, HttpServletRequest request);
 
-        /**
-         * 上次查看密码时间
-         */
-        private Timestamp seeTime;
-
-        /**
-         * 创建时间
-         */
-        private Timestamp createdAt;
-
-        /**
-         * 更新时间
-         */
-        private Timestamp updatedAt;
-    }
+    /**
+     * 获取通用令牌
+     *
+     * @param request 请求
+     * @return 通用令牌
+     */
+    ResponseEntity<BaseResponse<TokenGeneralDTO>> getTokenGeneral(HttpServletRequest request);
 }

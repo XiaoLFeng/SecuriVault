@@ -179,4 +179,27 @@ public class Util {
     public static String getUserUuid(@NotNull HttpServletRequest request) {
         return request.getHeader("X-User-Uuid");
     }
+
+    /**
+     * 获取用户 UUID
+     * <hr/>
+     * 用于获取用户 UUID；用于获取用户 UUID；用于获取用户 UUID
+     *
+     * @param key 用户 UUID
+     * @return 用户 UUID
+     */
+    public static String maskKey(@NotNull String key) {
+        if (key.length() <= 5) {
+            String start = key.substring(0, 2);
+            String middle = key.substring(2);
+            middle = middle.replaceAll("\\.", "*");
+            return start + middle;
+        } else {
+            String start = key.substring(0, 3);
+            String end = key.substring(key.length() - 2);
+            String middle = key.substring(3, key.length() - 2);
+            middle = middle.replaceAll("\\.", "*");
+            return start + middle + end;
+        }
+    }
 }

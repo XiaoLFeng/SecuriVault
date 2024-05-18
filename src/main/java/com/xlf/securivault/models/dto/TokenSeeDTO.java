@@ -38,74 +38,46 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-import java.util.List;
-
 /**
- * 密码数据传输对象
+ * 令牌查看DTO
  * <hr/>
- * 密码数据传输对象，用于返回密码的数据；
+ * 令牌查看DTO，用于定义令牌查看DTO；
  *
- * @since v1.0.0
  * @version v1.0.0
+ * @since v1.0.0
  * @author xiao_lfeng
  */
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class PasswordDTO {
+public class TokenSeeDTO {
     /**
-     * 密码组
+     * 令牌库识别码
      */
-    private List<Password> password;
-    /**
-     * 分页
-     */
-    private Long page;
-    /**
-     * 每页大小
-     */
-    private Long size;
-    /**
-     * 总数
-     */
-    private Long total;
+    private String id;
 
     /**
-     * 密码组
+     * 站点信息
      */
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class Password {
-        /**
-         * 密码库识别码
-         */
-        private String id;
+    private String website;
 
-        /**
-         * 网址域名
-         */
-        private String website;
+    /**
+     * 站点描述
+     */
+    private String description;
 
-        /**
-         * 对应网站用户名
-         */
-        private String username;
+    /**
+     * 账户密钥
+     */
+    private String accessKey;
 
-        /**
-         * 上次查看密码时间
-         */
-        private Timestamp seeTime;
+    /**
+     * 密码密钥
+     */
+    private String secretKey;
 
-        /**
-         * 创建时间
-         */
-        private Timestamp createdAt;
-
-        /**
-         * 更新时间
-         */
-        private Timestamp updatedAt;
-    }
+    /**
+     * 其他键值对的匹配
+     */
+    private Object other;
 }

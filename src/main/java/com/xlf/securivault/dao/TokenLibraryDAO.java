@@ -34,11 +34,16 @@
 
 package com.xlf.securivault.dao;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xlf.securivault.mappers.TokenLibraryMapper;
 import com.xlf.securivault.models.entity.TokenLibraryDO;
+import com.xlf.securivault.models.vo.TokenAddVO;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
 
 /**
  * Token库DAO
@@ -52,4 +57,109 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class TokenLibraryDAO
         extends ServiceImpl<TokenLibraryMapper, TokenLibraryDO>
-        implements IService<TokenLibraryDO> { }
+        implements IService<TokenLibraryDO> {
+
+    /**
+     * 检查Token是否存在
+     *
+     * @param tokenAddVO 令牌添加VO
+     * @param getUserUuid 获取用户UUID
+     * @return Token库DO
+     */
+    public TokenLibraryDO checkTokenExist(@NotNull TokenAddVO tokenAddVO, String getUserUuid) {
+        return this.lambdaQuery()
+                .eq(TokenLibraryDO::getUuid, getUserUuid)
+                .eq(TokenLibraryDO::getAccessKey, tokenAddVO.getAccessKey())
+                .eq(TokenLibraryDO::getSecretKey, tokenAddVO.getSecretKey())
+                .one();
+    }
+
+    /**
+     * 通过Token ID获取Token
+     *
+     * @param tokenId 令牌ID
+     * @param getUserUuid 获取用户UUID
+     * @return Token库DO
+     */
+    public TokenLibraryDO getTokenById(String tokenId, String getUserUuid) {
+        return this.lambdaQuery()
+                .eq(TokenLibraryDO::getUuid, getUserUuid)
+                .eq(TokenLibraryDO::getId, tokenId)
+                .one();
+    }
+
+    /**
+     * 获取用户所有Token
+     *
+     * @param getUserUuid 获取用户UUID
+     * @param search 搜索
+     * @param page 页码
+     * @param limit 限制
+     */
+    public Page<TokenLibraryDO> getUserAllToken(String getUserUuid, String search, Long page, Long limit) {
+        return this.lambdaQuery()
+                .eq(TokenLibraryDO::getUuid, getUserUuid)
+                .like(TokenLibraryDO::getAccessKey, search)
+                .isNull(TokenLibraryDO::getDeletedAt)
+                .or()
+                .eq(TokenLibraryDO::getUuid, getUserUuid)
+                .isNull(TokenLibraryDO::getDeletedAt)
+                .page(new Page<>(page, limit));
+    }
+
+    /**
+     * 获取用户所有Token
+     *
+     * @param getUserUuid 获取用户UUID
+     * @return Token库DO
+     */
+    public Long getUserAllTokenNoDelete(String getUserUuid) {
+        return this.lambdaQuery()
+                .eq(TokenLibraryDO::getUuid, getUserUuid)
+                .count();
+    }
+
+    /**
+     * 获取用户最近添加的Token
+     *
+     * @param getUserUuid 获取用户UUID
+     * @return Token库DO
+     */
+    public Long getUserRecentlyAddToken(String getUserUuid) {
+        Date lastSevenDays = new Date(System.currentTimeMillis() - 604800000);
+        return this.lambdaQuery()
+                .eq(TokenLibraryDO::getUuid, getUserUuid)
+                .gt(TokenLibraryDO::getCreatedAt, lastSevenDays)
+                .isNull(TokenLibraryDO::getDeletedAt)
+                .count();
+    }
+
+    /**
+     * 获取用户最近查看的Token
+     *
+     * @param getUserUuid 获取用户UUID
+     * @return Token库DO
+     */
+    public Long getUserRecentlySeeToken(String getUserUuid) {
+        Date lastSevenDays = new Date(System.currentTimeMillis() - 604800000);
+        return this.lambdaQuery()
+                .eq(TokenLibraryDO::getUuid, getUserUuid)
+                .gt(TokenLibraryDO::getSeeTime, lastSevenDays)
+                .isNull(TokenLibraryDO::getDeletedAt)
+                .count();
+    }
+
+    /**
+     * 获取用户最近删除的Token
+     *
+     * @param getUserUuid 获取用户UUID
+     * @return Token库DO
+     */
+    public Long getUserRecentlyRemoveToken(String getUserUuid) {
+        Date lastSevenDays = new Date(System.currentTimeMillis() - 604800000);
+        return this.lambdaQuery()
+                .eq(TokenLibraryDO::getUuid, getUserUuid)
+                .gt(TokenLibraryDO::getDeletedAt, lastSevenDays)
+                .count();
+    }
+}

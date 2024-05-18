@@ -40,6 +40,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xlf.securivault.mappers.LogsMapper;
 import com.xlf.securivault.models.entity.LogsDO;
 import com.xlf.securivault.models.entity.PasswordLibraryDO;
+import com.xlf.securivault.models.entity.TokenLibraryDO;
+import com.xlf.securivault.utility.Util;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
@@ -66,7 +68,7 @@ public class LogsDAO extends ServiceImpl<LogsMapper, LogsDO> implements IService
      * @param operation 操作
      */
     @Async
-    public void addLog(
+    public void addPasswordLog(
             String userUuid,
             @NotNull PasswordLibraryDO password,
             String type,
@@ -76,7 +78,23 @@ public class LogsDAO extends ServiceImpl<LogsMapper, LogsDO> implements IService
         log.setType(type)
                 .setControls(operation)
                 .setSite(password.getWebsite())
-                .setUsername(password.getUsername())
+                .setUsername(Util.maskKey(password.getUsername()))
+                .setUuid(userUuid);
+        this.save(log);
+    }
+
+    @Async
+    public void addTokenLog(
+            String userUuid,
+            @NotNull TokenLibraryDO token,
+            String type,
+            String operation
+    ) {
+        LogsDO log = new LogsDO();
+        log.setType(type)
+                .setSite(token.getSite())
+                .setControls(operation)
+                .setUsername(Util.maskKey(token.getAccessKey()))
                 .setUuid(userUuid);
         this.save(log);
     }

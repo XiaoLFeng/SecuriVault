@@ -42,9 +42,9 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * 密码数据传输对象
+ * 令牌数据传输对象
  * <hr/>
- * 密码数据传输对象，用于返回密码的数据；
+ * 令牌数据传输对象，用于返回令牌的数据；
  *
  * @since v1.0.0
  * @version v1.0.0
@@ -53,11 +53,11 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PasswordDTO {
+public class TokenDTO {
     /**
-     * 密码组
+     * 令牌组
      */
-    private List<Password> password;
+    private List<Token> token;
     /**
      * 分页
      */
@@ -72,26 +72,31 @@ public class PasswordDTO {
     private Long total;
 
     /**
-     * 密码组
+     * 令牌组
      */
     @Getter
     @Setter
     @NoArgsConstructor
-    public static class Password {
+    public static class Token {
         /**
-         * 密码库识别码
+         * 令牌库识别码
          */
         private String id;
 
         /**
-         * 网址域名
+         * 站点信息
          */
-        private String website;
+        private String site;
 
         /**
-         * 对应网站用户名
+         * 站点描述
          */
-        private String username;
+        private String description;
+
+        /**
+         * 账户密钥
+         */
+        private String accessKey;
 
         /**
          * 上次查看密码时间
@@ -102,10 +107,5 @@ public class PasswordDTO {
          * 创建时间
          */
         private Timestamp createdAt;
-
-        /**
-         * 更新时间
-         */
-        private Timestamp updatedAt;
     }
 }
