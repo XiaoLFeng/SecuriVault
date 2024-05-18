@@ -196,22 +196,26 @@ public class Util {
      * @param key 原码
      * @return 转义后的 Key
      */
-    public static @NotNull String maskKey(@NotNull String key) {
-        if (key.length() > 2) {
-            if (key.length() <= 5) {
-                String start = key.substring(0, 2);
-                String middle = key.substring(2);
-                middle = middle.replaceAll("\\S", "*");
-                return start + middle;
+    public static String maskKey(String key) {
+        if (key != null) {
+            if (key.length() > 2) {
+                if (key.length() <= 5) {
+                    String start = key.substring(0, 2);
+                    String middle = key.substring(2);
+                    middle = middle.replaceAll("\\S", "*");
+                    return start + middle;
+                } else {
+                    String start = key.substring(0, 3);
+                    String end = key.substring(key.length() - 2);
+                    String middle = key.substring(3, key.length() - 2);
+                    middle = middle.replaceAll("\\S", "*");
+                    return start + middle + end;
+                }
             } else {
-                String start = key.substring(0, 3);
-                String end = key.substring(key.length() - 2);
-                String middle = key.substring(3, key.length() - 2);
-                middle = middle.replaceAll("\\S", "*");
-                return start + middle + end;
+                return key;
             }
         } else {
-            return key;
+            return null;
         }
     }
 }

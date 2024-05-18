@@ -78,7 +78,7 @@ public class LogsDAO extends ServiceImpl<LogsMapper, LogsDO> implements IService
         log.setType(type)
                 .setControls(operation)
                 .setSite(password.getWebsite())
-                .setUsername(Util.maskKey(password.getUsername()))
+                .setUsername(password.getUsername())
                 .setUuid(userUuid);
         this.save(log);
     }
@@ -96,7 +96,7 @@ public class LogsDAO extends ServiceImpl<LogsMapper, LogsDO> implements IService
                 .setControls(operation)
                 .setUuid(userUuid);
         if (token.getAccessKey() != null) {
-            log.setUsername(Util.maskKey(Util.passwordLibraryDecode(token.getAccessKey())));
+            log.setUsername(Util.passwordLibraryDecode(token.getAccessKey()));
         }
         this.save(log);
     }

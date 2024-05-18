@@ -102,7 +102,7 @@ public class LogsServiceImpl implements LogsService {
                 log.setSite(it.getSite());
                 log.setControls(it.getControls());
                 log.setType(it.getType());
-                log.setUsername(it.getUsername());
+                log.setUsername(Util.maskKey(it.getUsername()));
                 log.setControlsAt(it.getControlsAt());
                 logs.add(log);
             });
