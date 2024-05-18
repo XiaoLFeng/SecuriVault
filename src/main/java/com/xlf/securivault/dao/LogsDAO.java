@@ -41,6 +41,7 @@ import com.xlf.securivault.mappers.LogsMapper;
 import com.xlf.securivault.models.entity.LogsDO;
 import com.xlf.securivault.models.entity.PasswordLibraryDO;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -63,9 +64,9 @@ public class LogsDAO extends ServiceImpl<LogsMapper, LogsDO> implements IService
      * @param password 密码
      * @param type     类型
      * @param operation 操作
-     * @return 是否添加成功
      */
-    public boolean addLog(
+    @Async
+    public void addLog(
             String userUuid,
             @NotNull PasswordLibraryDO password,
             String type,
@@ -77,7 +78,7 @@ public class LogsDAO extends ServiceImpl<LogsMapper, LogsDO> implements IService
                 .setSite(password.getWebsite())
                 .setUsername(password.getUsername())
                 .setUuid(userUuid);
-        return this.save(log);
+        this.save(log);
     }
 
     /**
