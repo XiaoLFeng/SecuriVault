@@ -92,6 +92,7 @@ public class NeedAuthorizationAspect {
                     log.debug("[VERIFY] 校验通过......");
                     getUser.setVerifyTime(new Timestamp(System.currentTimeMillis()));
                     userDAO.update(getUser, new UpdateWrapper<UserDO>().eq("uuid", getUserUuid));
+                    emailVerifyCodeDAO.removeById(getEmailVerifyCode.getId());
                     return;
                 }
                 emailVerifyCodeDAO.removeById(getEmailVerifyCode.getId());

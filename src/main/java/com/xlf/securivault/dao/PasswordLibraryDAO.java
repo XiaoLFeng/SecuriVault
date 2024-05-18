@@ -112,11 +112,13 @@ public class PasswordLibraryDAO
         if (search == null || search.isEmpty()) {
             return this.lambdaQuery()
                     .eq(PasswordLibraryDO::getUuid, getUserUuid)
+                    .isNull(PasswordLibraryDO::getDeletedAt)
                     .page(rowPage);
         } else {
             return this.lambdaQuery()
                     .eq(PasswordLibraryDO::getUuid, getUserUuid)
                     .like(PasswordLibraryDO::getWebsite, search)
+                    .isNull(PasswordLibraryDO::getDeletedAt)
                     .page(rowPage);
         }
     }
@@ -132,7 +134,6 @@ public class PasswordLibraryDAO
     public Long getUserPasswordTotal(String getUserUuid) {
         return this.lambdaQuery()
                 .eq(PasswordLibraryDO::getUuid, getUserUuid)
-                .isNull(PasswordLibraryDO::getDeletedAt)
                 .count();
     }
 
@@ -182,7 +183,6 @@ public class PasswordLibraryDAO
         Date lastSevenDays = new Date(System.currentTimeMillis() - 604800000);
         return this.lambdaQuery()
                 .eq(PasswordLibraryDO::getUuid, getUserUuid)
-                .isNotNull(PasswordLibraryDO::getDeletedAt)
                 .gt(PasswordLibraryDO::getDeletedAt, new Timestamp(lastSevenDays.getTime()))
                 .count();
     }

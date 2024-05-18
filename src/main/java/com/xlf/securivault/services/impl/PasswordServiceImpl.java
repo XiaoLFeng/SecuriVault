@@ -35,6 +35,7 @@
 package com.xlf.securivault.services.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import com.xlf.securivault.dao.PasswordLibraryDAO;
@@ -150,7 +151,7 @@ public class PasswordServiceImpl implements PasswordService {
             throw new BusinessException("密码不存在", ErrorCode.OPERATION_FAILED);
         }
         // 编辑密码
-        getPassword.setPassword(passwordEditVO.getPassword());
+        getPassword.setPassword(Util.passwordLibraryEncode(passwordEditVO.getPassword()));
         if (passwordEditVO.getOther() != null) {
             getPassword.setOther(passwordEditVO.getOther());
         }
@@ -183,9 +184,9 @@ public class PasswordServiceImpl implements PasswordService {
             throw new BusinessException("密码不存在", ErrorCode.OPERATION_FAILED);
         }
         // 删除密码
-        boolean status = passwordLibraryDAO.remove(
-                new QueryWrapper<PasswordLibraryDO>()
-                        .eq("id", getPassword.getId())
+        boolean status = passwordLibraryDAO.update(new UpdateWrapper<PasswordLibraryDO>()
+                .eq("id", getPassword.getId())
+                .set("deleted_at", new Timestamp(System.currentTimeMillis()))
         );
         if (status) {
             return ResultUtil.success("删除密码成功");
@@ -268,13 +269,14 @@ public class PasswordServiceImpl implements PasswordService {
     public ResponseEntity<BaseResponse<PasswordGeneralDTO>> getPasswordGeneral(HttpServletRequest request) {
         String getUserUuid = Util.getUserUuid(request);
         Long getCount = passwordLibraryDAO.getUserPasswordTotal(getUserUuid);
+        Long removeCount = passwordLibraryDAO.getUserPasswordRecentlyRemove(getUserUuid);
         // 获取密码的通用信息
         if (getCount > 0) {
             PasswordGeneralDTO generalPassword = new PasswordGeneralDTO();
-            generalPassword.setTotalPassword(getCount);
+            generalPassword.setTotalPassword(getCount - removeCount);
             generalPassword.setRecentlyAdd(passwordLibraryDAO.getUserPasswordRecentlyAdd(getUserUuid));
             generalPassword.setRecentlyGet(passwordLibraryDAO.getUserPasswordRecentlyGet(getUserUuid));
-            generalPassword.setRecentlyRemove(passwordLibraryDAO.getUserPasswordRecentlyRemove(getUserUuid));
+            generalPassword.setRecentlyRemove(removeCount);
             return ResultUtil.success("密码通用信息获取成功", generalPassword);
         } else {
             PasswordGeneralDTO generalPassword = new PasswordGeneralDTO();
