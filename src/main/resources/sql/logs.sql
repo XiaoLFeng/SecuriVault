@@ -43,7 +43,7 @@ create table xf_logs
             references xf_user,
     type        varchar                 not null,
     site        varchar,
-    username    varchar                 not null,
+    username    varchar,
     controls    varchar                 not null,
     controls_at timestamp default now() not null
 );

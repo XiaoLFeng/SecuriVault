@@ -187,7 +187,9 @@ public class TokenServiceImpl implements TokenService {
         }
         TokenSeeDTO seeToken = new TokenSeeDTO();
         BeanUtils.copyProperties(getToken, seeToken);
-        seeToken.setAccessKey(Util.passwordLibraryDecode(getToken.getAccessKey()));
+        if (getToken.getAccessKey() != null) {
+            seeToken.setAccessKey(Util.passwordLibraryDecode(getToken.getAccessKey()));
+        }
         seeToken.setSecretKey(Util.passwordLibraryDecode(getToken.getSecretKey()));
         logsDAO.addTokenLog(getUserUuid, getToken, "令牌", "查看令牌");
         return ResultUtil.success("获取令牌成功", seeToken);
@@ -226,7 +228,9 @@ public class TokenServiceImpl implements TokenService {
         userAllToken.getRecords().forEach(tokenLibraryDO -> {
             TokenDTO.Token token = new TokenDTO.Token();
             BeanUtils.copyProperties(tokenLibraryDO, token);
-            token.setAccessKey(Util.maskKey(Util.passwordLibraryDecode(tokenLibraryDO.getAccessKey())));
+            if (tokenLibraryDO.getAccessKey() != null) {
+                token.setAccessKey(Util.maskKey(Util.passwordLibraryDecode(tokenLibraryDO.getAccessKey())));
+            }
             tokenList.add(token);
         });
         tokenDTO.setToken(tokenList);

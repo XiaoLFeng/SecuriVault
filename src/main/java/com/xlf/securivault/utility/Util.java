@@ -150,9 +150,13 @@ public class Util {
      * @param password 密码
      * @return 加密后的密码
      */
-    public static String passwordLibraryEncode(@NotNull String password) {
-        String base64Password = Base64.getEncoder().encodeToString(password.getBytes());
-        return Base64.getEncoder().encodeToString(base64Password.getBytes());
+    public static String passwordLibraryEncode(String password) {
+        if (password != null) {
+            String base64Password = Base64.getEncoder().encodeToString(password.getBytes());
+            return Base64.getEncoder().encodeToString(base64Password.getBytes());
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -163,9 +167,13 @@ public class Util {
      * @param password 密码
      * @return 解密后的密码
      */
-    public static @NotNull String passwordLibraryDecode(@NotNull String password) {
-        String base64Password = new String(Base64.getDecoder().decode(password));
-        return new String(Base64.getDecoder().decode(base64Password));
+    public static String passwordLibraryDecode(String password) {
+        if (password != null) {
+            String base64Password = new String(Base64.getDecoder().decode(password));
+            return new String(Base64.getDecoder().decode(base64Password));
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -181,25 +189,29 @@ public class Util {
     }
 
     /**
-     * 获取用户 UUID
+     * 转义 Key
      * <hr/>
-     * 用于获取用户 UUID；用于获取用户 UUID；用于获取用户 UUID
+     * 将明码转义为 *；用于转义 Key
      *
-     * @param key 用户 UUID
-     * @return 用户 UUID
+     * @param key 原码
+     * @return 转义后的 Key
      */
-    public static String maskKey(@NotNull String key) {
-        if (key.length() <= 5) {
-            String start = key.substring(0, 2);
-            String middle = key.substring(2);
-            middle = middle.replaceAll("\\.", "*");
-            return start + middle;
+    public static @NotNull String maskKey(@NotNull String key) {
+        if (key.length() > 2) {
+            if (key.length() <= 5) {
+                String start = key.substring(0, 2);
+                String middle = key.substring(2);
+                middle = middle.replaceAll("\\S", "*");
+                return start + middle;
+            } else {
+                String start = key.substring(0, 3);
+                String end = key.substring(key.length() - 2);
+                String middle = key.substring(3, key.length() - 2);
+                middle = middle.replaceAll("\\S", "*");
+                return start + middle + end;
+            }
         } else {
-            String start = key.substring(0, 3);
-            String end = key.substring(key.length() - 2);
-            String middle = key.substring(3, key.length() - 2);
-            middle = middle.replaceAll("\\.", "*");
-            return start + middle + end;
+            return key;
         }
     }
 }

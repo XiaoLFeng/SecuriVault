@@ -73,7 +73,6 @@ public class TokenController {
      * @return ResponseEntity<BaseResponse < Void>>
      */
     @NeedUserLogin
-    @NeedAuthentication
     @PostMapping("")
     public ResponseEntity<BaseResponse<Void>> addToken(
             @RequestBody @Validated TokenAddVO tokenAddVO,
@@ -103,6 +102,7 @@ public class TokenController {
      * @return ResponseEntity<BaseResponse < Void>>
      */
     @NeedUserLogin
+    @NeedAuthentication
     @GetMapping("/{tokenId}")
     public ResponseEntity<BaseResponse<TokenSeeDTO>> getToken(
             @PathVariable String tokenId,
@@ -123,15 +123,16 @@ public class TokenController {
     @GetMapping("/list")
     public ResponseEntity<BaseResponse<TokenDTO>> getTokens(
             @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "page", defaultValue = "1", required = false) String page,
-            @RequestParam(value = "limit", defaultValue = "20", required = false) String limit,
+            @RequestParam(value = "page", defaultValue = "1") String page,
+            @RequestParam(value = "limit", defaultValue = "20") String limit,
             HttpServletRequest request
     ) {
-        if (!page.matches("[^0-9]+$")) {
+        log.info("search: {}, page: {}, limit: {}", search, page, limit);
+        if (!page.matches("^[0-9]+$")) {
             throw new BusinessException("页码或大小格式错误", ErrorCode.REQUEST_PATH_ERROR);
         }
-        if (!limit.matches("[^0-9]+$")) {
-            throw new BusinessException("页码或大小格式错误", ErrorCode.REQUEST_PATH_ERROR);
+        if (!limit.matches("^[0-9]+$")) {
+            throw new BusinessException("限制或大小格式错误", ErrorCode.REQUEST_PATH_ERROR);
         }
         return tokenService.getTokens(search, Long.parseLong(page), Long.parseLong(limit), request);
     }

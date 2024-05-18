@@ -59,7 +59,7 @@ public class TokenSeeDTO {
     /**
      * 站点信息
      */
-    private String website;
+    private String site;
 
     /**
      * 站点描述

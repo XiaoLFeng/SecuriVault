@@ -97,14 +97,18 @@ public class TokenLibraryDAO
      * @param limit 限制
      */
     public Page<TokenLibraryDO> getUserAllToken(String getUserUuid, String search, Long page, Long limit) {
-        return this.lambdaQuery()
-                .eq(TokenLibraryDO::getUuid, getUserUuid)
-                .like(TokenLibraryDO::getAccessKey, search)
-                .isNull(TokenLibraryDO::getDeletedAt)
-                .or()
-                .eq(TokenLibraryDO::getUuid, getUserUuid)
-                .isNull(TokenLibraryDO::getDeletedAt)
-                .page(new Page<>(page, limit));
+        if (search != null) {
+            return this.lambdaQuery()
+                    .eq(TokenLibraryDO::getUuid, getUserUuid)
+                    .like(TokenLibraryDO::getAccessKey, search)
+                    .isNull(TokenLibraryDO::getDeletedAt)
+                    .page(new Page<>(page, limit));
+        } else {
+            return this.lambdaQuery()
+                    .eq(TokenLibraryDO::getUuid, getUserUuid)
+                    .isNull(TokenLibraryDO::getDeletedAt)
+                    .page(new Page<>(page, limit));
+        }
     }
 
     /**
