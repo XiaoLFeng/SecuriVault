@@ -77,15 +77,15 @@ public class LogsController {
     @GetMapping("")
     public ResponseEntity<BaseResponse<LogsDTO>> getLog(
             @RequestParam(value = "page", required = false) String page,
-            @RequestParam(value = "limit", required = false) String size,
+            @RequestParam(value = "limit", required = false) String limit,
             HttpServletRequest request
     ) {
-        if (page != null && page.matches("^[0-9]+$")) {
+        if (page != null && !page.matches("^[0-9]+$")) {
             throw new BusinessException("页码格式错误", ErrorCode.REQUEST_BODY_PARAMETERS_ERROR);
         }
-        if (size != null && size.matches("^[0-9]+$")) {
+        if (limit != null && !limit.matches("^[0-9]+$")) {
             throw new BusinessException("每页数量格式错误", ErrorCode.REQUEST_BODY_PARAMETERS_ERROR);
         }
-        return logsService.getUserLogs(page, size, request);
+        return logsService.getUserLogs(page, limit, request);
     }
 }

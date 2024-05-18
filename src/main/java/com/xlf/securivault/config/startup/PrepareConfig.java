@@ -106,6 +106,7 @@ public class PrepareConfig {
             prepare.table("user");
             prepare.table("token");
             prepare.table("password_library");
+            prepare.table("logs");
         };
     }
 

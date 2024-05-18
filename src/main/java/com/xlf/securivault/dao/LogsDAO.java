@@ -60,9 +60,9 @@ public class LogsDAO extends ServiceImpl<LogsMapper, LogsDO> implements IService
      * <hr/>
      * 添加日志；用于添加日志；
      *
-     * @param userUuid 用户 UUID
-     * @param password 密码
-     * @param type     类型
+     * @param userUuid  用户 UUID
+     * @param password  密码
+     * @param type      类型
      * @param operation 操作
      */
     @Async
@@ -92,8 +92,10 @@ public class LogsDAO extends ServiceImpl<LogsMapper, LogsDO> implements IService
      * @return 日志
      */
     public Page<LogsDO> getLogsByUserUuid(String userUuid, Long page, Long size) {
-        return this.page(new Page<>(page, size), this.lambdaQuery()
+        Page<LogsDO> pages = new Page<>(page, size);
+        return this.lambdaQuery()
                 .eq(LogsDO::getUuid, userUuid)
-        );
+                .orderByDesc(LogsDO::getControlsAt)
+                .page(pages);
     }
 }
