@@ -5,9 +5,14 @@
 - 后端平台：https://github.com/XiaoLFeng/SecuriVault
 - 前端平台：https://github.com/XiaoLFeng/securi-vault-web
 
-## 项目介绍
+--- 
 
-![Alt](https://repobeats.axiom.co/api/embed/4164278cc3b3c27b5cc7c8df1143673a1c9dfa64.svg "Repobeats analytics image")
+本项目已完成课程设计的要求，已完成所有的开发，不再进行维护。
+若对此项目有任何问题，欢迎通过邮箱联系我，我会尽快回复。
+请勿直接使用此项目，可能存在一些问题，不建议直接使用。
+也请勿将此项目直接用于商业活动，若有需要，请联系我并标明出处，谢谢🙏！若需要进行商业活动或修改后进行商业活动，请联系我。（我需要做一个知情的！）
+
+## 项目介绍
 
 ### 核心特性
 
